@@ -8,7 +8,7 @@ import os
 from colorama import Fore
 
 
-def get_data(address = "http://192.168.4.15") -> pandas.DataFrame:
+def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
     """
     Generic function for getting csv data over http. Returns the data formatted as pandas dataframe or None if an
     error was encountered.
