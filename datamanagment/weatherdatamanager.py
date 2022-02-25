@@ -1,7 +1,7 @@
 import math
 import pandas as pd
-import datamanager
-import datagrabber
+import datamanagment.datamanager
+import datamanagment.datagrabber
 from threadqueue import threadqueuing
 from super_awsome_helper_functions import recursive_mkdir, safe_save_dataframe
 
