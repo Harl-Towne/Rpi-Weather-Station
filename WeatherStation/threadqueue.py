@@ -15,7 +15,7 @@ class workerGeneric(QRunnable):
         self.callback()
 
 
-def convert_to_queuing(fcn):
+def threadqueuing(fcn):
     def queuing_fcn(*args2, **kwargs2):
         threadQueue.enqueue(fcn, *args2, **kwargs2)
 

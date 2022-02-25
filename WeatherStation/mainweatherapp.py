@@ -1,47 +1,115 @@
 import sys
-from random import randint
-from time import sleep
 
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtCore import QTimer, pyqtSlot, QRunnable, QThreadPool, pyqtSignal
+import numpy as np
+from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QMainWindow, QGridLayout
 
-from qt_ui import main_ui
-from randomclass import randomClass
-from threadqueue import workerGeneric, threadQueue
+import main_ui
+
+import pyqtgraph as pg
+
+from datamanagment.datagrabber import get_data
+from datamanagment.weatherdatamanager import WeatherData
 
 
-class mainWindow(QMainWindow, main_ui.Ui_MainWindow):
+class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
+    wind_directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
     def __init__(self):
+        print("#"*20)
         super().__init__()
         self.setupUi()
 
     def setupUi(self, **kwargs):
-        super(mainWindow, self).setupUi(self)
+        super(mainWeatherWindow, self).setupUi(self)
+
+        # get data
+        try:
+            self.data = WeatherData()
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
+        except:
+            init_data = get_data()
+            self.data = WeatherData(initial_data=init_data)
+
+        # data update timer
+        self.newdata_timer = QTimer()
+        self.newdata_timer.timeout.connect(self.data.update_data)
+        self.newdata_timer.start(1000*5)
+
+        # data save timer
+        self.savedata_timer = QTimer()
+        self.savedata_timer.timeout.connect(self.data.save_data)
+        self.savedata_timer.start(1000*60*1)
+
+
+        # set starting screen
+        self.stackedWidget.setCurrentIndex(0)
 
         # connect all toolbar buttons to actions
-        self.actionDashboard.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(0))
-        self.actionDaily_Graphs.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(1))
-        self.actionWeekly_Graphs.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(2))
-        self.actionYearly_Graphs.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(3))
-        self.actionAll_Time_Graphs.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(4))
-        self.actionSettings.triggered.connect(lambda: self.stackedWidget.setCurrentIndex(5))
+        self.actionDashboard.triggered.connect(lambda: self.toolbar_clicked(0))
+        self.actionDaily_Graphs.triggered.connect(lambda: self.toolbar_clicked(1))
+        self.actionWeekly_Graphs.triggered.connect(lambda: self.toolbar_clicked(2))
+        self.actionYearly_Graphs.triggered.connect(lambda: self.toolbar_clicked(3))
+        self.actionAll_Time_Graphs.triggered.connect(lambda: self.toolbar_clicked(4))
+        self.actionSettings.triggered.connect(lambda: self.toolbar_clicked(5))
         self.actionExit.triggered.connect(lambda: sys.exit())
 
-        self.t1 = QTimer()
-        self.t1.setInterval(1000)
-        self.t1.timeout.connect(lambda: print("t1"))
+        # update timers
+        self.dashboard_timer = QTimer()
+        self.dashboard_timer.timeout.connect(self.update_dashboard)
+        self.dashboard_timer.start(1000 * 5)
 
-        self.t2 = QTimer()
-        self.t2.setInterval(500)
-        self.t2.timeout.connect(lambda: print("t2"))
+        self.daily_timer = QTimer()
+        self.daily_timer.timeout.connect(self.update_daily)
+        self.daily_timer.start(1000 * 5)
 
-        self.pushButton.clicked.connect(lambda: self.t1.start())
-        self.pushButton_2.clicked.connect(lambda: self.t2.start())
+        self.weekly_timer = QTimer()
+        self.weekly_timer.timeout.connect(self.update_weekly)
+        self.weekly_timer.start(1000 * 60 * 5)
 
-        self.pushButton_3.clicked.connect(self.run_blocker)
-        self.n = 0
+        self.yearly_timer = QTimer()
+        self.yearly_timer.timeout.connect(self.update_yearly)
+        self.yearly_timer.start(1000 * 60 * 60 * 1)
 
-    def run_blocker(self):
-        r = randomClass(a=2, b=2)
-        r.block()
+        self.all_timer = QTimer()
+        self.all_timer.timeout.connect(self.update_all)
+        self.all_timer.start(1000 * 60 * 60 * 1)
+
+        # create curves for all the plots
+        self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
+
+        self.plotcurves["daily"]['temp'] = self.tempDailyGraph.plot(np.array([0]))
+        self.plotcurves["daily"]['hum'] = self.humDailyGraph.plot(np.array([0]))
+        self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
+        self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
+
+    def toolbar_clicked(self, btn_no):
+        self.stackedWidget.setCurrentIndex(btn_no)
+
+    def update_dashboard(self):
+        latest_data = self.data.rt_data.iloc[-1, :]
+        self.currentTempFeild.setText(str(latest_data["temperature"]))
+        self.currenthumFeild.setText(str(latest_data["humidity"]))
+        self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
+        self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
+        self.dayRainFeild.setText(str(latest_data["rain"]))
+
+    def update_daily(self):
+        pass
+        # d = self.plotcurves["daily"]["temp"].getData()
+        print("="*20)
+        print(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float).dtype)
+        self.plotcurves["daily"]["temp"].setData(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
+        self.plotcurves["daily"]["hum"].setData(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
+        self.plotcurves["daily"]["wind"].setData(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
+        self.plotcurves["daily"]["rain"].setData(np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
+
+    def update_weekly(self):
+        pass
+
+    def update_yearly(self):
+        pass
+
+    def update_all(self):
+        pass

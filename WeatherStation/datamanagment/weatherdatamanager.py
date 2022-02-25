@@ -2,8 +2,7 @@ import math
 import pandas as pd
 import datamanager
 import datagrabber
-import os
-
+from threadqueue import threadqueuing
 from super_awsome_helper_functions import recursive_mkdir, safe_save_dataframe
 
 
@@ -26,6 +25,7 @@ class WeatherData(datamanager.Data):
                 else:
                     self.agg_data[i][column] = pd.to_numeric(self.agg_data[i][column])
 
+    @threadqueuing
     def aggregate_data(self):
         # for each aggregated dataset
         for i, data in enumerate(self.agg_data):
@@ -131,6 +131,7 @@ class WeatherData(datamanager.Data):
             return None
         return pd.concat(aggregate_datums, ignore_index=True)
 
+    @threadqueuing
     def update_data(self):
         # self.rt_data = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
         new_data = datagrabber.get_data()
@@ -139,6 +140,7 @@ class WeatherData(datamanager.Data):
         else:
             raise Exception("Failed to update data")
 
+    @threadqueuing
     def save_data(self):
         # make sure the folder to save files into exists
         recursive_mkdir(self.data_path)

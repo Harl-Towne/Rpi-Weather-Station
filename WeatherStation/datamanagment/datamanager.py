@@ -7,11 +7,11 @@ class Data:
     def __init__(self, storage_path="data",
                  real_time_duration=pd.Timedelta("24 hours"),
                  agg_durations=(pd.Timedelta("7 days"), pd.Timedelta("365 days")),
-                 agg_intervals=(1800, 86400, 86400),
+                 agg_intervals=(pd.Timedelta("1800S"), pd.Timedelta("86400S"), pd.Timedelta("86400S")),
                  initial_data=None):
         self.real_time_duration = real_time_duration
         self.agg_durations = agg_durations
-        self.agg_intervals = [pd.Timedelta("{}S".format(agg_interval)) for agg_interval in agg_intervals]
+        self.agg_intervals = agg_intervals
         self.data_path = os.path.join(os.getcwd(), storage_path)
 
         # if initial data was provided use it to create empty history arrays
