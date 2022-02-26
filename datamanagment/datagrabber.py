@@ -56,7 +56,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
         raise KeyboardInterrupt
     except Exception as e:
         print("Error getting data from station:\n", e)
-        traceback.print_exc()
+        # traceback.print_exc()
         return None
 
 

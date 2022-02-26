@@ -40,6 +40,10 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             except:
                 print("failed")
                 sys.exit(-1)
+            finally:
+                print("succeeded")
+        finally:
+            print("succeeded")
 
         # data update timer
         self.newdata_timer = QTimer()
