@@ -89,11 +89,10 @@ class WeatherData(datamanager.Data):
             # aggregate data into single datum
             agg_datum = dict()
             agg_datum["datetime"] = current_epoch
-            ranged_data = source_data.iloc[data_start:data_end, 1:]
             if data_start is None and data_end is not None:
                 # no data matching timeframe (insert null datum)
                 # aggregate data into single datum
-                for column in ranged_data.columns:
+                for column in source_data.columns:
                     if column == "rain":
                         agg_datum[column] = [math.nan]
                     elif column == "wind_direction":
@@ -110,6 +109,8 @@ class WeatherData(datamanager.Data):
                 # reached end of df before current epoch was up - should not happen because of last_epoch variable
                 raise Exception("This error should never be raised. ")
             else:
+                ranged_data = source_data.iloc[data_start:data_end, 1:]
+                print(ranged_data)
                 for column in ranged_data.columns:
                     if column == "rain":
                         agg_datum[column] = [ranged_data[column].sum()]
@@ -117,6 +118,7 @@ class WeatherData(datamanager.Data):
                         agg_datum[column] = [ranged_data[column].mode()[0]]
                     else:
                         if initial_aggregation:
+                            print(column)
                             agg_datum["max_{}".format(column)] = [ranged_data[column].max()]
                             agg_datum["min_{}".format(column)] = [ranged_data[column].min()]
                             agg_datum["avg_{}".format(column)] = [ranged_data[column].mean()]
