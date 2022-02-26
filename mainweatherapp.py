@@ -46,7 +46,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.savedata_timer.start(1000*60*1)
 
         # data aggregate timer
-        print(self.data.agg_durations[0].seconds)
+        print('sec', self.data.agg_intervals[0].total_seconds())
 
 
         # set starting screen
