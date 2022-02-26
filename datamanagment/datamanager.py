@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+from super_awsome_helper_functions import recursive_mkdir
+
 
 class Data:
 
@@ -34,6 +36,7 @@ class Data:
             return
 
         # if initial data was not provided try and load previously saved data data
+        recursive_mkdir(self.data_path)
         files = os.listdir(self.data_path)
 
         # load real time data
