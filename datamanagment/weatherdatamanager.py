@@ -110,6 +110,7 @@ class WeatherData(datamanager.Data):
             else:
                 ranged_data = source_data.iloc[data_start:data_end, 1:]
                 print(ranged_data)
+                print(ranged_data.dtypes)
                 for column in ranged_data.columns:
                     if column == "rain":
                         agg_datum[column] = [ranged_data[column].sum()]
@@ -160,4 +161,5 @@ class WeatherData(datamanager.Data):
 
         # save all aggregated data
         for i, agg_datum in enumerate(self.agg_data):
-            safe_save_dataframe(agg_datum, str(i), self.data_path)
+            if not agg_datum.empty:
+                safe_save_dataframe(agg_datum, str(i), self.data_path)
