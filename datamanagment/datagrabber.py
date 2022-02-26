@@ -49,9 +49,9 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
 
+        print("Successfully got data")
         return pd.DataFrame(data_dict)
 
-        print("Successfully got data")
     # more error shit
     except KeyboardInterrupt:
         raise KeyboardInterrupt
