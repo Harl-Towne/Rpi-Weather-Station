@@ -133,7 +133,6 @@ class WeatherData(datamanager.Data):
 
     @threadqueuing
     def update_data(self):
-        # self.rt_data = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
         new_data = datagrabber.get_data()
         if new_data is not None:
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
