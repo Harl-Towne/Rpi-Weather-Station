@@ -56,7 +56,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # data aggregate timer
         self.aggdata_timer = QTimer()
         self.aggdata_timer.timeout.connect(self.data.aggregate_data)
-        self.aggdata_timer.start(int(1000 * self.data.agg_intervals[0].total_seconds() * 1.5))
+        self.aggdata_timer.start(30)#int(1000 * self.data.agg_intervals[0].total_seconds() * 1.5))
 
         # set starting screen
         self.stackedWidget.setCurrentIndex(0)
@@ -70,7 +70,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.actionSettings.triggered.connect(lambda: self.toolbar_clicked(5))
         self.actionExit.triggered.connect(lambda: sys.exit())
 
-        # update timers
+        # ui update timers
         self.dashboard_timer = QTimer()
         self.dashboard_timer.timeout.connect(self.update_dashboard)
         self.dashboard_timer.start(1000 * 5)
