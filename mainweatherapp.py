@@ -45,6 +45,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.savedata_timer.timeout.connect(self.data.save_data)
         self.savedata_timer.start(1000*60*1)
 
+        # data aggregate timer
+        print(self.data.agg_durations[0].seconds)
+
 
         # set starting screen
         self.stackedWidget.setCurrentIndex(0)
