@@ -56,6 +56,7 @@ class WeatherData(datamanager.Data):
             new_data = self._get_aggregated_data(first_epoch, last_epoch, interval, source_data, initial_aggregation)
             if new_data is None:
                 print('no new')
+                print(self.agg_data[i])
                 continue
 
             # if there was previous data: append. otherwise just set as it avoids some conflicts
@@ -134,6 +135,7 @@ class WeatherData(datamanager.Data):
             last_used_index = data_end
             current_epoch += interval
         print(aggregate_datums)
+        print("-"*10)
         if len(aggregate_datums) == 0:
             return None
         return pd.concat(aggregate_datums, ignore_index=True)

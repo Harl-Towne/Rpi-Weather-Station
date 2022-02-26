@@ -10,6 +10,7 @@ import pyqtgraph as pg
 
 from datamanagment.datagrabber import get_data
 from datamanagment.weatherdatamanager import WeatherData
+from time import sleep
 
 
 class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
@@ -43,6 +44,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
                     raise KeyboardInterrupt
                 except:
                     print("failed")
+                    sleep(3)
 
         # data update timer
         self.newdata_timer = QTimer()
