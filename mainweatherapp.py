@@ -96,10 +96,6 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
-        pass
-        # d = self.plotcurves["daily"]["temp"].getData()
-        print("="*20)
-        print(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float).dtype)
         self.plotcurves["daily"]["temp"].setData(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
         self.plotcurves["daily"]["hum"].setData(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
         self.plotcurves["daily"]["wind"].setData(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))

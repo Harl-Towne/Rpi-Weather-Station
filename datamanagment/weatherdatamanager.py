@@ -138,7 +138,8 @@ class WeatherData(datamanager.Data):
         if new_data is not None:
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
         else:
-            raise Exception("Failed to update data")
+            # raise Exception("Failed to update data")
+            print("Failed to update data")
 
     @threadqueuing
     def save_data(self):
