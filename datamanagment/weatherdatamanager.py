@@ -28,7 +28,7 @@ class WeatherData(datamanager.Data):
     @threadqueuing
     def aggregate_data(self):
         # for each aggregated dataset
-        for i, data in enumerate(self.agg_data):
+        for i in range(len(self.agg_data)):
             print("########### {} ###########".format(i))
             # if the data is being aggregated from the real time data it needs to be done slightly differently
             if i == 0:
@@ -37,6 +37,10 @@ class WeatherData(datamanager.Data):
             else:
                 source_data = self.agg_data[i - 1]
                 initial_aggregation = False
+
+            if source_data.empty:
+                print("no data to agg from")
+                continue
 
             # get period and interval to aggregate data with
             interval = pd.Timedelta(self.agg_intervals[i])

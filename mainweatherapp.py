@@ -33,7 +33,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         except:
             print("failed")
             while True:
-                print("###### trying to get data from station instead ######")
+                print("###### trying to get data from station ######")
                 try:
                     init_data = get_data()
                     self.data = WeatherData(initial_data=init_data)
