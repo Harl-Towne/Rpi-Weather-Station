@@ -48,9 +48,9 @@ class WeatherData(datamanager.Data):
             interval = pd.Timedelta(self.agg_intervals[i])
             last_epoch = source_data.iloc[-1, :]["datetime"].round(interval)  # exclusive
             if self.agg_data[i].empty:
-                first_epoch = self.agg_data[0].iloc[-1, :]["datetime"] + interval  # inclusive
-            else:
                 first_epoch = source_data.iloc[0, :]["datetime"].round(interval)  # inclusive
+            else:
+                first_epoch = self.agg_data[0].iloc[-1, :]["datetime"] + interval  # inclusive
 
             print(first_epoch, last_epoch, "(", interval, ")")
 
