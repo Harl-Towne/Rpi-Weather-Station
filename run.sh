@@ -1,3 +1,4 @@
 git pull
 python3 main.py
-read - "Press enter to end"
+echo "end"
+read -p "Press enter to end"

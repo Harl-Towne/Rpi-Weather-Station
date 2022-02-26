@@ -9,5 +9,5 @@ if __name__ == '__main__':
     app.setStyle('Fusion')
     win = mainweatherapp.mainWeatherWindow()
     # win.showFullScreen()
-    # win.show()
+    win.show()
     sys.exit(app.exec())
