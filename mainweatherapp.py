@@ -29,7 +29,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
+            print("###### trying to get data instead ######")
             init_data = get_data()
+            print(init_data)
             self.data = WeatherData(initial_data=init_data)
 
         # data update timer
