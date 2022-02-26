@@ -27,6 +27,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         try:
             print("###### trying to load data from disk ######")
             self.data = WeatherData()
+            print("succeeded")
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
@@ -35,15 +36,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             try:
                 init_data = get_data()
                 self.data = WeatherData(initial_data=init_data)
+                print("succeeded")
             except KeyboardInterrupt:
                 raise KeyboardInterrupt
             except:
                 print("failed")
                 sys.exit(-1)
-            finally:
-                print("succeeded")
-        finally:
-            print("succeeded")
 
         # data update timer
         self.newdata_timer = QTimer()

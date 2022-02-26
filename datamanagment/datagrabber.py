@@ -51,6 +51,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
 
         return pd.DataFrame(data_dict)
 
+        print("Successfully got data")
     # more error shit
     except KeyboardInterrupt:
         raise KeyboardInterrupt
@@ -58,8 +59,6 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
         print("Error getting data from station:\n", e)
         # traceback.print_exc()
         return None
-    finally:
-        print("Succesfully got data")
 
 
 def test():
