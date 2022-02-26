@@ -42,8 +42,6 @@ class WeatherData(datamanager.Data):
                 print("no data to agg from")
                 continue
 
-            print(self.agg_data[i])
-
             # get period and interval to aggregate data with
             interval = pd.Timedelta(self.agg_intervals[i])
             last_epoch = source_data.iloc[-1, :]["datetime"].round(interval)  # exclusive
@@ -62,9 +60,9 @@ class WeatherData(datamanager.Data):
 
             # if there was previous data: append. otherwise, just set as it avoids some conflicts
             if self.agg_data[i].empty:
-                self.agg_data[i] = pd.concat([self.agg_data[i], new_data], ignore_index=True)
-            else:
                 self.agg_data[i] = new_data
+            else:
+                self.agg_data[i] = pd.concat([self.agg_data[i], new_data], ignore_index=True)
 
             print(self.agg_data[i])
 
