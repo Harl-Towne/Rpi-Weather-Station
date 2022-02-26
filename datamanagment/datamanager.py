@@ -24,15 +24,15 @@ class Data:
             self.agg_data = list()
 
             # create empty dataframe because specifying columns in pd.DataFrame() doesn't work on raspberry pi
-            empty_df = dict()
-            for column in list(initial_data.columns):
-                empty_df[column] = []
+            # empty_df = dict()
+            # for column in list(initial_data.columns):
+            #     empty_df[column] = []
             # create aggregate dataframes
             for i in range(len(agg_durations)):
-                self.agg_data.append(pd.DataFrame(empty_df))
+                self.agg_data.append(pd.DataFrame({'a': []}))
             # create additional dataframe if it is required for the all-time dataframe
             if agg_intervals[-2] != agg_intervals[-1]:
-                self.agg_data.append(pd.DataFrame(empty_df))
+                self.agg_data.append(pd.DataFrame({'a': []}))
             return
 
         # if initial data was not provided try and load previously saved data data
@@ -55,7 +55,9 @@ class Data:
             elif fn in files and os.path.isfile(os.path.join(self.data_path, fn)):
                 self.agg_data.append(pd.read_csv(os.path.join(self.data_path, fn)))
             else:
-                raise Exception("Previous data not found in {} and sample data was not supplied.".format(self.data_path))
+                # raise Exception("Previous data not found in {} and sample data was not supplied.".format(self.data_path))
+                print("Previous aggregate data {} not found in {} and sample data was not supplied. Empty dataframe will be used.".format(i, self.data_path))
+                self.agg_data.append(pd.DataFrame({'a': []}))
 
         # load  additional dataframe if it is required for the all-time dataframe
         if agg_intervals[-2] != agg_intervals[-1]:
@@ -67,7 +69,9 @@ class Data:
             elif fn in files and os.path.isfile(os.path.join(self.data_path, fn)):
                 self.agg_data.append(pd.read_csv(os.path.join(self.data_path, fn)))
             else:
-                raise Exception("Previous data not found in {} and sample data was not supplied.".format(self.data_path))
+                # raise Exception("Previous data not found in {} and sample data was not supplied.".format(self.data_path))
+                print("Previous aggregate data {} not found in {} and sample data was not supplied. Empty dataframe will be used.".format(i, self.data_path))
+                self.agg_data.append(pd.DataFrame({'a': []}))
 
         # call conversion function
         self._convert_columns()

@@ -46,9 +46,12 @@ class WeatherData(datamanager.Data):
             else:
                 first_epoch = source_data.iloc[0, :]["datetime"].round(interval)  # inclusive
 
+            print(first_epoch, last_epoch, "(", interval, ")")
+
             # aggregate data
             new_data = self._get_aggregated_data(first_epoch, last_epoch, interval, source_data, initial_aggregation)
             if new_data is None:
+                print('no new')
                 continue
 
             # if there was previous data: append. otherwise just set as it avoids some conflicts
