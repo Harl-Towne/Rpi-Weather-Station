@@ -49,7 +49,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # data update timer
         self.newdata_timer = QTimer()
         self.newdata_timer.timeout.connect(self.data.update_data)
-        self.newdata_timer.start(1000*5)
+        self.newdata_timer.start(1000*4)
 
         # data save timerr()
         #         # self.savedata_timer.timeout.connect(self.data.save_data)
