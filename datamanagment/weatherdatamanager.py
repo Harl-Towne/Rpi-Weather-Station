@@ -11,7 +11,7 @@ from super_awsome_helper_functions import recursive_mkdir, safe_save_dataframe
 # TODO: delete data somewhere
 class WeatherData(datamanager.Data):
 
-    rt_nan_gap = 1
+    rt_nan_gap = 3
 
     def _convert_columns(self):
         # convert rt_data
