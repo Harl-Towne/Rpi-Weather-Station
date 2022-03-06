@@ -44,18 +44,11 @@ def get_data(address="http://192.168.4.15") -> Tuple[DataFrame, Union[Timedelta,
             data_dict[key] = list()
 
         # process data from request
-        print("#"*40)
-        print("now:", now)
-        print("int:", measurement_interval)
-        print("start:", start_epoch)
-        print("-"*20)
         for row_num, line in enumerate(re.split("\n", r.text)):
             if line is None or line == "":
                 continue
             datum = re.split(",", re.sub(" ", "", re.sub("[\r\n]", "", line)))
             data_dict["datetime"].append(now + (measurement_interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
-            print((start_epoch + row_num + 1))
-            print(now + (measurement_interval * (start_epoch + row_num + 1)))
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
 

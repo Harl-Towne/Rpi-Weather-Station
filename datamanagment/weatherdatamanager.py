@@ -11,7 +11,7 @@ from super_awsome_helper_functions import recursive_mkdir, safe_save_dataframe
 # TODO: delete data somewhere
 class WeatherData(datamanager.Data):
 
-    rt_nan_gap = 3
+    rt_nan_gap = 1
 
     def _convert_columns(self):
         # convert rt_data
@@ -148,6 +148,7 @@ class WeatherData(datamanager.Data):
 
     @threadqueuing
     def update_data(self):
+        print("#"*40)
         new_data, measurement_interval = datagrabber.get_data()
         if new_data is not None:
             # get the last datetime in the already recorded data and the first datetime in the new data
@@ -156,18 +157,21 @@ class WeatherData(datamanager.Data):
 
             # if the gap between these two datetimes is large enough fill the gap with NaNs
             if first_new_time - last_recorded_time > measurement_interval * self.rt_nan_gap:
+                print("hey there's a gap")
                 nan_dict = dict()
                 for key in new_data.columns:
                     nan_dict[key] = list()
 
-                current_time = last_recorded_time + measurement_interval * self.rt_nan_gap
+                current_time = last_recorded_time + measurement_interval# * self.rt_nan_gap
                 while current_time < first_new_time:
                     for key in new_data.columns:
                         nan_dict[key].append(np.NaN)
                     nan_dict['datetime'][-1] = current_time
                     current_time = current_time + measurement_interval
 
+                print(pd.DataFrame(nan_dict))
                 self.rt_data = pd.concat([self.rt_data, pd.DataFrame(nan_dict)], ignore_index=True)
+
 
             # append new data to recorded data
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
