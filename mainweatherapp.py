@@ -119,6 +119,11 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             self.axes[key]['wind'] = f3.add_subplot(111)
             self.axes[key]['rain'] = f4.add_subplot(111)
 
+            self.axes[key]['temp'].autoscale(enable=True, axis='both', tight=True)
+            self.axes[key]['hum'].autoscale(enable=True, axis='both', tight=True)
+            self.axes[key]['wind'].autoscale(enable=True, axis='both', tight=True)
+            self.axes[key]['rain'].autoscale(enable=True, axis='both', tight=True)
+
             layout.addWidget(c1, 0, 0, 1, 1)
             layout.addWidget(c2, 0, 1, 1, 1)
             layout.addWidget(c3, 1, 0, 1, 1)
