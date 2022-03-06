@@ -162,7 +162,7 @@ class WeatherData(datamanager.Data):
                 while current_time < first_new_time:
                     for key in new_data.columns:
                         nan_dict[key].append(np.NaN)
-                    nan_dict['datatime'][-1] = current_time
+                    nan_dict['datetime'][-1] = current_time
                     current_time = current_time + measurement_interval
                 nan_dataframe = pd.DataFrame(nan_dict)
                 print(nan_dataframe)
