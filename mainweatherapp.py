@@ -30,10 +30,20 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
         daily_graph_layout = self.Daily_Graphs.layout()
 
-        self.tempDailyGraph = FigureCanvas(Figure())
-        self.humDailyGraph = FigureCanvas(Figure())
-        self.windDailyGraph = FigureCanvas(Figure())
-        self.rainDailyGraph = FigureCanvas(Figure())
+        f1 = Figure()
+        f2 = Figure()
+        f3 = Figure()
+        f4 = Figure()
+
+        self.tempDailyGraph = FigureCanvas(f1)
+        self.humDailyGraph = FigureCanvas(f2)
+        self.windDailyGraph = FigureCanvas(f3)
+        self.rainDailyGraph = FigureCanvas(f4)
+
+        self.plotcurves["daily"]['temp'] = f1.add_subplot(111)
+        self.plotcurves["daily"]['hum'] = f2.add_subplot(111)
+        self.plotcurves["daily"]['wind'] = f3.add_subplot(111)
+        self.plotcurves["daily"]['rain'] = f4.add_subplot(111)
 
         # self.tempDailyGraph.setObjectName("tempDailyGraph")
         # self.humDailyGraph.setObjectName("humDailyGraph")
