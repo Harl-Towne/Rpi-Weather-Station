@@ -28,32 +28,6 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     def setupUi(self, **kwargs):
         super(mainWeatherWindow, self).setupUi(self)
 
-        self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
-
-        layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
-        for i, layout in enumerate(layouts):
-            f1 = Figure()
-            f2 = Figure()
-            f3 = Figure()
-            f4 = Figure()
-
-            c1 = FigureCanvas(f1)
-            c2 = FigureCanvas(f2)
-            c3 = FigureCanvas(f3)
-            c4 = FigureCanvas(f4)
-
-            key = list(self.plotcurves.keys())[i]
-
-            self.plotcurves[key]['temp'] = f1.add_subplot(111)
-            self.plotcurves[key]['hum'] = f2.add_subplot(111)
-            self.plotcurves[key]['wind'] = f3.add_subplot(111)
-            self.plotcurves[key]['rain'] = f4.add_subplot(111)
-
-            layout.addWidget(c1, 0, 0, 1, 1)
-            layout.addWidget(c2, 0, 1, 1, 1)
-            layout.addWidget(c3, 1, 0, 1, 1)
-            layout.addWidget(c4, 1, 1, 1, 1)
-
         # get data
         try:
             print("###### trying to load data from disk ######")
@@ -103,34 +77,52 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.actionSettings.triggered.connect(lambda: self.toolbar_clicked(5))
         self.actionExit.triggered.connect(lambda: sys.exit())
 
-        # # ui update timers
-        # self.dashboard_timer = QTimer()
-        # self.dashboard_timer.timeout.connect(self.update_dashboard)
-        # self.dashboard_timer.start(1000 * 5)
-        #
-        # self.daily_timer = QTimer()
-        # self.daily_timer.timeout.connect(self.update_daily)
-        # self.daily_timer.start(1000 * 5)
-        #
-        # self.weekly_timer = QTimer()
-        # self.weekly_timer.timeout.connect(self.update_weekly)
-        # self.weekly_timer.start(1000 * 60 * 5)
-        #
-        # self.yearly_timer = QTimer()
-        # self.yearly_timer.timeout.connect(self.update_yearly)
-        # self.yearly_timer.start(1000 * 60 * 60 * 1)
-        #
-        # self.all_timer = QTimer()
-        # self.all_timer.timeout.connect(self.update_all)
-        # self.all_timer.start(1000 * 60 * 60 * 1)
-        #
-        # # create curves for all the plots
-        # self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
-        #
-        # self.plotcurves["daily"]['temp'] = self.tempDailyGraph.plot(np.array([0]))
-        # self.plotcurves["daily"]['hum'] = self.humDailyGraph.plot(np.array([0]))
-        # self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
-        # self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
+        # ui update timers
+        self.dashboard_timer = QTimer()
+        self.dashboard_timer.timeout.connect(self.update_dashboard)
+        self.dashboard_timer.start(1000 * 5)
+
+        self.daily_timer = QTimer()
+        self.daily_timer.timeout.connect(self.update_daily)
+        self.daily_timer.start(1000 * 5)
+
+        self.weekly_timer = QTimer()
+        self.weekly_timer.timeout.connect(self.update_weekly)
+        self.weekly_timer.start(1000 * 60 * 5)
+
+        self.yearly_timer = QTimer()
+        self.yearly_timer.timeout.connect(self.update_yearly)
+        self.yearly_timer.start(1000 * 60 * 60 * 1)
+
+        self.all_timer = QTimer()
+        self.all_timer.timeout.connect(self.update_all)
+        self.all_timer.start(1000 * 60 * 60 * 1)
+
+        # create plots and add into window
+        self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
+        layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
+        for i, layout in enumerate(layouts):
+            f1 = Figure()
+            f2 = Figure()
+            f3 = Figure()
+            f4 = Figure()
+
+            c1 = FigureCanvas(f1)
+            c2 = FigureCanvas(f2)
+            c3 = FigureCanvas(f3)
+            c4 = FigureCanvas(f4)
+
+            key = list(self.axes.keys())[i]
+
+            self.axes[key]['temp'] = f1.add_subplot(111)
+            self.axes[key]['hum'] = f2.add_subplot(111)
+            self.axes[key]['wind'] = f3.add_subplot(111)
+            self.axes[key]['rain'] = f4.add_subplot(111)
+
+            layout.addWidget(c1, 0, 0, 1, 1)
+            layout.addWidget(c2, 0, 1, 1, 1)
+            layout.addWidget(c3, 1, 0, 1, 1)
+            layout.addWidget(c4, 1, 1, 1, 1)
 
     def toolbar_clicked(self, btn_no):
         self.stackedWidget.setCurrentIndex(btn_no)
@@ -144,10 +136,15 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
-        self.plotcurves["daily"]["temp"].setData(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
-        self.plotcurves["daily"]["hum"].setData(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
-        self.plotcurves["daily"]["wind"].setData(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
-        self.plotcurves["daily"]["rain"].setData(np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
+        self.axes["daily"]["temp"].clear()
+        self.axes["daily"]["hum"].clear()
+        self.axes["daily"]["wind"].clear()
+        self.axes["daily"]["rain"].clear()
+
+        self.axes["daily"]["temp"].plot(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
+        self.axes["daily"]["hum"].plot(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
+        self.axes["daily"]["wind"].plot(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
+        self.axes["daily"]["rain"].plot(np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
 
     def update_weekly(self):
         pass
