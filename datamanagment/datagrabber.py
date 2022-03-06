@@ -50,7 +50,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
             if line is None or line == "":
                 continue
             datum = re.split(",", re.sub(" ", "", re.sub("[\r\n]", "", line)))
-            data_dict["datetime"].append(now + (interval * (start_epoch + row_num)))
+            data_dict["datetime"].append(now + (interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
             print((start_epoch + row_num))
             print(now + (interval * (start_epoch + row_num)))
             for col_num, key in enumerate(keys):
