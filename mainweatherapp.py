@@ -99,8 +99,8 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.all_timer.start(1000 * 60 * 60 * 1)
 
         # create plots and add into window
-        self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
-        self.figures = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
+        self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}  # for updating data
+        self.figures = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}  # for triggering redraw
         layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
         for i, layout in enumerate(layouts):
             key = list(self.axes.keys())[i]
@@ -144,18 +144,17 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
-        print("daily update")
         self.axes["daily"]["temp"].clear()
         self.axes["daily"]["hum"].clear()
         self.axes["daily"]["wind"].clear()
         self.axes["daily"]["rain"].clear()
 
-        print(len(self.data.rt_data.loc[:, "temperature"].to_numpy()))
+        x = self.data.rt_data.loc[:, "datetime"].to_numpy()
 
-        self.axes["daily"]["temp"].plot(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
-        self.axes["daily"]["hum"].plot(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
-        self.axes["daily"]["wind"].plot(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
-        self.axes["daily"]["rain"].plot(np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
+        self.axes["daily"]["temp"].plot(x, np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
+        self.axes["daily"]["hum"].plot(x, np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
+        self.axes["daily"]["wind"].plot(x, np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
+        self.axes["daily"]["rain"].plot(x, np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
 
         self.axes["daily"]['temp'].autoscale(enable=True, axis='both', tight=True)
         self.axes["daily"]['hum'].autoscale(enable=True, axis='both', tight=True)
@@ -166,7 +165,6 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["daily"]["hum"].canvas.draw()
         self.figures["daily"]["wind"].canvas.draw()
         self.figures["daily"]["rain"].canvas.draw()
-
 
     def update_weekly(self):
         pass
