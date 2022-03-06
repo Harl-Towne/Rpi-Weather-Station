@@ -152,6 +152,7 @@ class WeatherData(datamanager.Data):
             first_new_time = new_data.iloc[0, :]["datetime"]
             print(new_data)
             print("="*20)
+            print(first_new_time, last_recorded_time, first_new_time - last_recorded_time)
             if first_new_time - last_recorded_time > measurement_interval:
                 print("hey there's a gap")
                 nan_dict = dict()
