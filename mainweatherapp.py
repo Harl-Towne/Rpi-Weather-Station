@@ -107,12 +107,13 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(btn_no)
 
     def update_dashboard(self):
-        latest_data = self.data.rt_data.iloc[-1, :]
-        self.currentTempFeild.setText(str(latest_data["temperature"]))
-        self.currenthumFeild.setText(str(latest_data["humidity"]))
-        self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
-        self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
-        self.dayRainFeild.setText(str(latest_data["rain"]))
+        pass
+        # latest_data = self.data.rt_data.iloc[-1, :]
+        # self.currentTempFeild.setText(str(latest_data["temperature"]))
+        # self.currenthumFeild.setText(str(latest_data["humidity"]))
+        # self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
+        # self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
+        # self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
         self.plotcurves["daily"]["temp"].setData(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
