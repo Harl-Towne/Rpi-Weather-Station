@@ -166,8 +166,11 @@ class WeatherData(datamanager.Data):
                     current_time = current_time + measurement_interval
                 nan_dataframe = pd.DataFrame(nan_dict)
                 print(nan_dataframe)
+                self.rt_data = pd.concat([self.rt_data, nan_dataframe], ignore_index=True)
 
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
+            print("+"*30)
+            print(self.rt_data)
         else:
             # raise Exception("Failed to update data")
             print("Failed to update data")
