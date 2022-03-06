@@ -143,6 +143,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
+        print("daily update")
         # self.axes["daily"]["temp"].clear()
         # self.axes["daily"]["hum"].clear()
         # self.axes["daily"]["wind"].clear()
