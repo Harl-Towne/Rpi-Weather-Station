@@ -100,6 +100,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
         # create plots and add into window
         self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
+        self.figures = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
         layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
         for i, layout in enumerate(layouts):
             key = list(self.axes.keys())[i]
