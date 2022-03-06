@@ -51,8 +51,8 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
                 continue
             datum = re.split(",", re.sub(" ", "", re.sub("[\r\n]", "", line)))
             data_dict["datetime"].append(now + (interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
-            print((start_epoch + row_num))
-            print(now + (interval * (start_epoch + row_num)))
+            print((start_epoch + row_num + 1))
+            print(now + (interval * (start_epoch + row_num + 1)))
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
         print("#"*30)
