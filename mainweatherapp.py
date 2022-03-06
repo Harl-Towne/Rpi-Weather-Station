@@ -161,10 +161,10 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["daily"]['wind'].autoscale(enable=True, axis='both', tight=True)
         self.axes["daily"]['rain'].autoscale(enable=True, axis='both', tight=True)
 
-        self.figures[key]['temp'].autofmt_xdate()
-        self.figures[key]['hum'].autofmt_xdate()
-        self.figures[key]['wind'].autofmt_xdate()
-        self.figures[key]['rain'].autofmt_xdate()
+        self.figures["daily"]['temp'].autofmt_xdate()
+        self.figures["daily"]['hum'].autofmt_xdate()
+        self.figures["daily"]['wind'].autofmt_xdate()
+        self.figures["daily"]['rain'].autofmt_xdate()
 
         self.figures["daily"]["temp"].canvas.draw()
         self.figures["daily"]["hum"].canvas.draw()
