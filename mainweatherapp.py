@@ -40,6 +40,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.windDailyGraph = FigureCanvas(f3)
         self.rainDailyGraph = FigureCanvas(f4)
 
+        self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
         self.plotcurves["daily"]['temp'] = f1.add_subplot(111)
         self.plotcurves["daily"]['hum'] = f2.add_subplot(111)
         self.plotcurves["daily"]['wind'] = f3.add_subplot(111)
