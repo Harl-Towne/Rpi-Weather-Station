@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\PLASMINFORGE\Dropbox\Apps\DiyWeatherStation\WeatherStation\main_ui.ui'
+# Form implementation generated from reading ui file '.\main_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -486,16 +486,16 @@ class Ui_MainWindow(object):
         self.Daily_Graphs.setObjectName("Daily_Graphs")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.Daily_Graphs)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.tempDailyGraph = PlotWidget(self.Daily_Graphs)
+        self.tempDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
         self.tempDailyGraph.setObjectName("tempDailyGraph")
         self.gridLayout_3.addWidget(self.tempDailyGraph, 0, 0, 1, 1)
-        self.humDailyGraph = PlotWidget(self.Daily_Graphs)
+        self.humDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
         self.humDailyGraph.setObjectName("humDailyGraph")
         self.gridLayout_3.addWidget(self.humDailyGraph, 0, 1, 1, 1)
-        self.windDailyGraph = PlotWidget(self.Daily_Graphs)
+        self.windDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
         self.windDailyGraph.setObjectName("windDailyGraph")
         self.gridLayout_3.addWidget(self.windDailyGraph, 1, 0, 1, 1)
-        self.rainDailyGraph = PlotWidget(self.Daily_Graphs)
+        self.rainDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
         self.rainDailyGraph.setObjectName("rainDailyGraph")
         self.gridLayout_3.addWidget(self.rainDailyGraph, 1, 1, 1, 1)
         self.stackedWidget.addWidget(self.Daily_Graphs)
@@ -612,7 +612,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionExit)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -654,4 +654,15 @@ class Ui_MainWindow(object):
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
 from pyqtgraph import PlotWidget
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+

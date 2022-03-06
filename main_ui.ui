@@ -1251,7 +1251,7 @@
   <customwidget>
    <class>FigureCanvasQTAgg</class>
    <extends>QWidget</extends>
-   <header>backend_qt4agg</header>
+   <header>matplotlib.backends.backend_qt4agg</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

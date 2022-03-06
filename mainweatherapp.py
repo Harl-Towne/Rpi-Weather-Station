@@ -77,34 +77,34 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.actionSettings.triggered.connect(lambda: self.toolbar_clicked(5))
         self.actionExit.triggered.connect(lambda: sys.exit())
 
-        # ui update timers
-        self.dashboard_timer = QTimer()
-        self.dashboard_timer.timeout.connect(self.update_dashboard)
-        self.dashboard_timer.start(1000 * 5)
-
-        self.daily_timer = QTimer()
-        self.daily_timer.timeout.connect(self.update_daily)
-        self.daily_timer.start(1000 * 5)
-
-        self.weekly_timer = QTimer()
-        self.weekly_timer.timeout.connect(self.update_weekly)
-        self.weekly_timer.start(1000 * 60 * 5)
-
-        self.yearly_timer = QTimer()
-        self.yearly_timer.timeout.connect(self.update_yearly)
-        self.yearly_timer.start(1000 * 60 * 60 * 1)
-
-        self.all_timer = QTimer()
-        self.all_timer.timeout.connect(self.update_all)
-        self.all_timer.start(1000 * 60 * 60 * 1)
-
-        # create curves for all the plots
-        self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
-
-        self.plotcurves["daily"]['temp'] = self.tempDailyGraph.plot(np.array([0]))
-        self.plotcurves["daily"]['hum'] = self.humDailyGraph.plot(np.array([0]))
-        self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
-        self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
+        # # ui update timers
+        # self.dashboard_timer = QTimer()
+        # self.dashboard_timer.timeout.connect(self.update_dashboard)
+        # self.dashboard_timer.start(1000 * 5)
+        #
+        # self.daily_timer = QTimer()
+        # self.daily_timer.timeout.connect(self.update_daily)
+        # self.daily_timer.start(1000 * 5)
+        #
+        # self.weekly_timer = QTimer()
+        # self.weekly_timer.timeout.connect(self.update_weekly)
+        # self.weekly_timer.start(1000 * 60 * 5)
+        #
+        # self.yearly_timer = QTimer()
+        # self.yearly_timer.timeout.connect(self.update_yearly)
+        # self.yearly_timer.start(1000 * 60 * 60 * 1)
+        #
+        # self.all_timer = QTimer()
+        # self.all_timer.timeout.connect(self.update_all)
+        # self.all_timer.start(1000 * 60 * 60 * 1)
+        #
+        # # create curves for all the plots
+        # self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
+        #
+        # self.plotcurves["daily"]['temp'] = self.tempDailyGraph.plot(np.array([0]))
+        # self.plotcurves["daily"]['hum'] = self.humDailyGraph.plot(np.array([0]))
+        # self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
+        # self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
 
     def toolbar_clicked(self, btn_no):
         self.stackedWidget.setCurrentIndex(btn_no)
