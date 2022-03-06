@@ -102,22 +102,22 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
         layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
         for i, layout in enumerate(layouts):
-            f1 = Figure()
-            f2 = Figure()
-            f3 = Figure()
-            f4 = Figure()
+            self.figures[key]['temp'] = Figure()
+            self.figures[key]['hum'] = Figure()
+            self.figures[key]['wind'] = Figure()
+            self.figures[key]['rain'] = Figure()
 
-            c1 = FigureCanvas(f1)
-            c2 = FigureCanvas(f2)
-            c3 = FigureCanvas(f3)
-            c4 = FigureCanvas(f4)
+            c1 = FigureCanvas(self.figures[key]['temp'])
+            c2 = FigureCanvas(self.figures[key]['hum'])
+            c3 = FigureCanvas(self.figures[key]['wind'])
+            c4 = FigureCanvas(self.figures[key]['rain'])
 
             key = list(self.axes.keys())[i]
 
-            self.axes[key]['temp'] = f1.add_subplot(111)
-            self.axes[key]['hum'] = f2.add_subplot(111)
-            self.axes[key]['wind'] = f3.add_subplot(111)
-            self.axes[key]['rain'] = f4.add_subplot(111)
+            self.axes[key]['temp'] = self.figures[key]['temp'].add_subplot(111)
+            self.axes[key]['hum'] = self.figures[key]['hum'].add_subplot(111)
+            self.axes[key]['wind'] = self.figures[key]['wind'].add_subplot(111)
+            self.axes[key]['rain'] = self.figures[key]['rain'].add_subplot(111)
 
             self.axes[key]['temp'].autoscale(enable=True, axis='both', tight=True)
             self.axes[key]['hum'].autoscale(enable=True, axis='both', tight=True)
