@@ -75,25 +75,25 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.actionExit.triggered.connect(lambda: sys.exit())
 
         # ui update timers
-        self.dashboard_timer = QTimer()
-        self.dashboard_timer.timeout.connect(self.update_dashboard)
-        self.dashboard_timer.start(1000 * 5)
-
-        self.daily_timer = QTimer()
-        self.daily_timer.timeout.connect(self.update_daily)
-        self.daily_timer.start(1000 * 5)
-
-        self.weekly_timer = QTimer()
-        self.weekly_timer.timeout.connect(self.update_weekly)
-        self.weekly_timer.start(1000 * 60 * 5)
-
-        self.yearly_timer = QTimer()
-        self.yearly_timer.timeout.connect(self.update_yearly)
-        self.yearly_timer.start(1000 * 60 * 60 * 1)
-
-        self.all_timer = QTimer()
-        self.all_timer.timeout.connect(self.update_all)
-        self.all_timer.start(1000 * 60 * 60 * 1)
+        # self.dashboard_timer = QTimer()
+        # self.dashboard_timer.timeout.connect(self.update_dashboard)
+        # self.dashboard_timer.start(1000 * 5)
+        #
+        # self.daily_timer = QTimer()
+        # self.daily_timer.timeout.connect(self.update_daily)
+        # self.daily_timer.start(1000 * 5)
+        #
+        # self.weekly_timer = QTimer()
+        # self.weekly_timer.timeout.connect(self.update_weekly)
+        # self.weekly_timer.start(1000 * 60 * 5)
+        #
+        # self.yearly_timer = QTimer()
+        # self.yearly_timer.timeout.connect(self.update_yearly)
+        # self.yearly_timer.start(1000 * 60 * 60 * 1)
+        #
+        # self.all_timer = QTimer()
+        # self.all_timer.timeout.connect(self.update_all)
+        # self.all_timer.start(1000 * 60 * 60 * 1)
 
         # create curves for all the plots
         self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
@@ -107,13 +107,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(btn_no)
 
     def update_dashboard(self):
-        pass
-        # latest_data = self.data.rt_data.iloc[-1, :]
-        # self.currentTempFeild.setText(str(latest_data["temperature"]))
-        # self.currenthumFeild.setText(str(latest_data["humidity"]))
-        # self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
-        # self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
-        # self.dayRainFeild.setText(str(latest_data["rain"]))
+        latest_data = self.data.rt_data.iloc[-1, :]
+        self.currentTempFeild.setText(str(latest_data["temperature"]))
+        self.currenthumFeild.setText(str(latest_data["humidity"]))
+        self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
+        self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
+        self.dayRainFeild.setText(str(latest_data["rain"]))
 
     def update_daily(self):
         self.plotcurves["daily"]["temp"].setData(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
