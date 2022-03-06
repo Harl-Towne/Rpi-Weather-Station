@@ -43,7 +43,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             c4 = FigureCanvas(f4)
 
             key = self.plotcurves.keys()
-            key = key[i]
+            print(key, type(key))
             self.plotcurves[key]['temp'] = f1.add_subplot(111)
             self.plotcurves[key]['hum'] = f2.add_subplot(111)
             self.plotcurves[key]['wind'] = f3.add_subplot(111)
