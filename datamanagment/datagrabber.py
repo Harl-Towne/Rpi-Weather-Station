@@ -31,7 +31,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
 
         # get meta-data
         interval = pd.Timedelta("{}ms".format(r.headers["MeasurementInterval"]))
-        start_epoch = int(r.headers["StartEpoch"])
+        start_epoch = int(r.headers["StartEpoch"])  # this is a negative number specifying how many epochs ago the data starts
         keys = re.split(",", re.sub(" ", "", r.headers["Feilds"]))
 
         # initialise dit
@@ -51,6 +51,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
                 continue
             datum = re.split(",", re.sub(" ", "", re.sub("[\r\n]", "", line)))
             data_dict["datetime"].append(now + (interval * (start_epoch + row_num)))
+            print((start_epoch + row_num))
             print(now + (interval * (start_epoch + row_num)))
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
