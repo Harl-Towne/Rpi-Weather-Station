@@ -149,6 +149,8 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["daily"]["wind"].clear()
         self.axes["daily"]["rain"].clear()
 
+        print(len(self.data.rt_data.loc[:, "temperature"].to_numpy()))
+
         self.axes["daily"]["temp"].plot(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
         self.axes["daily"]["hum"].plot(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
         self.axes["daily"]["wind"].plot(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
