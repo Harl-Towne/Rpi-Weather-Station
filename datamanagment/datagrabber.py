@@ -1,4 +1,6 @@
 import traceback
+from typing import Tuple, Union
+
 import pandas
 import requests as req
 import pandas as pd
@@ -6,9 +8,11 @@ import re
 from time import sleep
 import os
 from colorama import Fore
+from pandas import DataFrame, Timedelta
+from pandas._libs import NaTType
 
 
-def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
+def get_data(address="http://192.168.4.15") -> Tuple[DataFrame, Union[Timedelta, NaTType, NaTType]]:
     """
     Generic function for getting csv data over http. Returns the data formatted as pandas dataframe or None if an
     error was encountered.
