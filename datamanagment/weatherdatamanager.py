@@ -11,6 +11,8 @@ from super_awsome_helper_functions import recursive_mkdir, safe_save_dataframe
 # TODO: delete data somewhere
 class WeatherData(datamanager.Data):
 
+    rt_nan_gap = 3
+
     def _convert_columns(self):
         # convert rt_data
         for column in self.rt_data.columns:
@@ -95,16 +97,16 @@ class WeatherData(datamanager.Data):
                 # aggregate data into single datum
                 for column in source_data.columns:
                     if column == "rain":
-                        agg_datum[column] = [math.nan]
+                        agg_datum[column] = [np.NaN]
                     elif column == "wind_direction":
-                        agg_datum[column] = [math.nan]
+                        agg_datum[column] = [np.NaN]
                     else:
                         if initial_aggregation:
-                            agg_datum["max_{}".format(column)] = [math.nan]
-                            agg_datum["min_{}".format(column)] = [math.nan]
-                            agg_datum["avg_{}".format(column)] = [math.nan]
+                            agg_datum["max_{}".format(column)] = [np.NaN]
+                            agg_datum["min_{}".format(column)] = [np.NaN]
+                            agg_datum["avg_{}".format(column)] = [np.NaN]
                         else:
-                            agg_datum[column] = [math.nan]
+                            agg_datum[column] = [np.NaN]
 
             elif data_end is None:
                 # reached end of df before current epoch was up - should not happen because of last_epoch variable
@@ -148,29 +150,27 @@ class WeatherData(datamanager.Data):
     def update_data(self):
         new_data, measurement_interval = datagrabber.get_data()
         if new_data is not None:
+            # get the last datetime in the already recorded data and the first datetime in the new data
             last_recorded_time = self.rt_data.iloc[-1, :]["datetime"]
             first_new_time = new_data.iloc[0, :]["datetime"]
-            print(new_data)
-            print("="*20)
-            print(first_new_time, last_recorded_time, first_new_time - last_recorded_time)
-            if first_new_time - last_recorded_time > measurement_interval:
-                print("hey there's a gap")
+
+            # if the gap between these two datetimes is large enough fill the gap with NaNs
+            if first_new_time - last_recorded_time > measurement_interval * self.rt_nan_gap:
                 nan_dict = dict()
                 for key in new_data.columns:
                     nan_dict[key] = list()
-                current_time = last_recorded_time + measurement_interval
+
+                current_time = last_recorded_time + measurement_interval * self.rt_nan_gap
                 while current_time < first_new_time:
                     for key in new_data.columns:
                         nan_dict[key].append(np.NaN)
                     nan_dict['datetime'][-1] = current_time
                     current_time = current_time + measurement_interval
-                nan_dataframe = pd.DataFrame(nan_dict)
-                print(nan_dataframe)
-                self.rt_data = pd.concat([self.rt_data, nan_dataframe], ignore_index=True)
 
+                self.rt_data = pd.concat([self.rt_data, pd.DataFrame(nan_dict)], ignore_index=True)
+
+            # append new data to recorded data
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
-            print("+"*30)
-            print(self.rt_data)
         else:
             # raise Exception("Failed to update data")
             print("Failed to update data")

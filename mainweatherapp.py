@@ -51,16 +51,16 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.newdata_timer.timeout.connect(self.data.update_data)
         self.newdata_timer.start(1000*4)
 
-        # data save timerr()
-        #         # self.savedata_timer.timeout.connect(self.data.save_data)
-        #         # self.savedata_timer.start(1000*60*1)
-        # self.savedata_timer = QTime
+        # data save timer
+        self.savedata_timer.timeout.connect(self.data.save_data)
+        self.savedata_timer.start(1000*60*1)
+        self.savedata_timer = QTimer()
 
         # data aggregate timer
-        # self.aggdata_timer = QTimer()
-        # self.aggdata_timer.timeout.connect(self.data.aggregate_data)
-        # self.aggdata_timer.start(10000)#int(1000 * self.data.agg_intervals[0].total_seconds() * 1.5))
-        # self.data.aggregate_data()
+        self.aggdata_timer = QTimer()
+        self.aggdata_timer.timeout.connect(self.data.aggregate_data)
+        self.aggdata_timer.start(10000)
+        self.data.aggregate_data()
 
         # set starting screen
         self.stackedWidget.setCurrentIndex(0)
@@ -75,25 +75,25 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.actionExit.triggered.connect(lambda: sys.exit())
 
         # ui update timers
-        # self.dashboard_timer = QTimer()
-        # self.dashboard_timer.timeout.connect(self.update_dashboard)
-        # self.dashboard_timer.start(1000 * 5)
-        #
-        # self.daily_timer = QTimer()
-        # self.daily_timer.timeout.connect(self.update_daily)
-        # self.daily_timer.start(1000 * 5)
-        #
-        # self.weekly_timer = QTimer()
-        # self.weekly_timer.timeout.connect(self.update_weekly)
-        # self.weekly_timer.start(1000 * 60 * 5)
-        #
-        # self.yearly_timer = QTimer()
-        # self.yearly_timer.timeout.connect(self.update_yearly)
-        # self.yearly_timer.start(1000 * 60 * 60 * 1)
-        #
-        # self.all_timer = QTimer()
-        # self.all_timer.timeout.connect(self.update_all)
-        # self.all_timer.start(1000 * 60 * 60 * 1)
+        self.dashboard_timer = QTimer()
+        self.dashboard_timer.timeout.connect(self.update_dashboard)
+        self.dashboard_timer.start(1000 * 5)
+
+        self.daily_timer = QTimer()
+        self.daily_timer.timeout.connect(self.update_daily)
+        self.daily_timer.start(1000 * 5)
+
+        self.weekly_timer = QTimer()
+        self.weekly_timer.timeout.connect(self.update_weekly)
+        self.weekly_timer.start(1000 * 60 * 5)
+
+        self.yearly_timer = QTimer()
+        self.yearly_timer.timeout.connect(self.update_yearly)
+        self.yearly_timer.start(1000 * 60 * 60 * 1)
+
+        self.all_timer = QTimer()
+        self.all_timer.timeout.connect(self.update_all)
+        self.all_timer.start(1000 * 60 * 60 * 1)
 
         # create curves for all the plots
         self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
