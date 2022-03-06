@@ -41,6 +41,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
             data_dict[key] = list()
 
         # process data from request
+        print("#"*40)
         print("now:", now)
         print("int:", interval)
         print("start:", start_epoch)
@@ -53,6 +54,7 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
             print(now + (interval * (start_epoch + row_num)))
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
+        print("#"*30)
 
         print("Successfully got data")
         return pd.DataFrame(data_dict)
