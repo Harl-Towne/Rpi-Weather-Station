@@ -7,6 +7,10 @@ from PyQt5.QtWidgets import QMainWindow, QGridLayout
 import main_ui
 
 import pyqtgraph as pg
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 from datamanagment.datagrabber import get_data
 from datamanagment.weatherdatamanager import WeatherData
@@ -101,11 +105,6 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.plotcurves["daily"]['hum'] = self.humDailyGraph.plot(np.array([0]))
         self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
         self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
-
-        self.plotcurves["daily"]['temp'].setSkipFiniteCheck(True)
-        self.plotcurves["daily"]['hum'].setSkipFiniteCheck(True)
-        self.plotcurves["daily"]['wind'].setSkipFiniteCheck(False)
-        self.plotcurves["daily"]['rain'].setSkipFiniteCheck(False)
 
     def toolbar_clicked(self, btn_no):
         self.stackedWidget.setCurrentIndex(btn_no)

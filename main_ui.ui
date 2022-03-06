@@ -1037,16 +1037,16 @@
       <widget class="QWidget" name="Daily_Graphs">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="PlotWidget" name="tempDailyGraph" native="true"/>
+         <widget class="FigureCanvasQTAgg" name="tempDailyGraph" native="true"/>
         </item>
         <item row="0" column="1">
-         <widget class="PlotWidget" name="humDailyGraph" native="true"/>
+         <widget class="FigureCanvasQTAgg" name="humDailyGraph" native="true"/>
         </item>
         <item row="1" column="0">
-         <widget class="PlotWidget" name="windDailyGraph" native="true"/>
+         <widget class="FigureCanvasQTAgg" name="windDailyGraph" native="true"/>
         </item>
         <item row="1" column="1">
-         <widget class="PlotWidget" name="rainDailyGraph" native="true"/>
+         <widget class="FigureCanvasQTAgg" name="rainDailyGraph" native="true"/>
         </item>
        </layout>
       </widget>
@@ -1246,6 +1246,12 @@
    <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FigureCanvasQTAgg</class>
+   <extends>QWidget</extends>
+   <header>backend_qt4agg</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
