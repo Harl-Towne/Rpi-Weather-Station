@@ -151,6 +151,11 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["daily"]["wind"].plot(np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
         self.axes["daily"]["rain"].plot(np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
 
+        self.axes["daily"]['temp'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["daily"]['hum'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["daily"]['wind'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["daily"]['rain'].autoscale(enable=True, axis='both', tight=True)
+
     def update_weekly(self):
         pass
 
