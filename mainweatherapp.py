@@ -144,10 +144,10 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
     def update_daily(self):
         print("daily update")
-        # self.axes["daily"]["temp"].clear()
-        # self.axes["daily"]["hum"].clear()
-        # self.axes["daily"]["wind"].clear()
-        # self.axes["daily"]["rain"].clear()
+        self.axes["daily"]["temp"].clear()
+        self.axes["daily"]["hum"].clear()
+        self.axes["daily"]["wind"].clear()
+        self.axes["daily"]["rain"].clear()
 
         self.axes["daily"]["temp"].plot(np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
         self.axes["daily"]["hum"].plot(np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
