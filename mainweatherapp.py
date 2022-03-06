@@ -110,6 +110,11 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             self.figures[key]['wind'] = Figure()
             self.figures[key]['rain'] = Figure()
 
+            self.figures[key]['temp'].autofmt_xdate()
+            self.figures[key]['hum'].autofmt_xdate()
+            self.figures[key]['wind'].autofmt_xdate()
+            self.figures[key]['rain'].autofmt_xdate()
+
             c1 = FigureCanvas(self.figures[key]['temp'])
             c2 = FigureCanvas(self.figures[key]['hum'])
             c3 = FigureCanvas(self.figures[key]['wind'])
