@@ -16,9 +16,6 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
     :rtype: pandas.DataFrame or None
     """
     try:
-        # current datetime for later
-        now = pd.Timestamp.now()
-
         # get data from weather station
         r = req.get(address, timeout=10)
 
@@ -30,9 +27,11 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
             return None
 
         # get meta-data
-        interval = pd.Timedelta("{}ms".format(r.headers["MeasurementInterval"]))
+        measurement_interval = pd.Timedelta("{}ms".format(r.headers["MeasurementInterval"]))
         start_epoch = int(r.headers["StartEpoch"])  # this is a negative number specifying how many epochs ago the data starts
         keys = re.split(",", re.sub(" ", "", r.headers["Feilds"]))
+        # current datetime for later
+        now = pd.Timestamp.now().floor(measurement_interval)
 
         # initialise dit
         data_dict = dict()
@@ -43,22 +42,21 @@ def get_data(address="http://192.168.4.15") -> pandas.DataFrame:
         # process data from request
         print("#"*40)
         print("now:", now)
-        print("int:", interval)
+        print("int:", measurement_interval)
         print("start:", start_epoch)
         print("-"*20)
         for row_num, line in enumerate(re.split("\n", r.text)):
             if line is None or line == "":
                 continue
             datum = re.split(",", re.sub(" ", "", re.sub("[\r\n]", "", line)))
-            data_dict["datetime"].append(now + (interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
+            data_dict["datetime"].append(now + (measurement_interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
             print((start_epoch + row_num + 1))
-            print(now + (interval * (start_epoch + row_num + 1)))
+            print(now + (measurement_interval * (start_epoch + row_num + 1)))
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
-        print("#"*30)
 
         print("Successfully got data")
-        return pd.DataFrame(data_dict)
+        return pd.DataFrame(data_dict), measurement_interval
 
     # more error shit
     except KeyboardInterrupt:

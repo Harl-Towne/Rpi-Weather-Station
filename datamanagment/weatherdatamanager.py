@@ -144,12 +144,17 @@ class WeatherData(datamanager.Data):
 
     @threadqueuing
     def update_data(self):
-        new_data = datagrabber.get_data()
+        new_data, measurement_interval = datagrabber.get_data()
+        last_recorded_time = self.rt_data.iloc[-1, :]["datetime"]
+        first_new_time = new_data.iloc[0, :]["datetime"]
+        print(last_recorded_time, first_new_time)
         if new_data is not None:
             self.rt_data = pd.concat([self.rt_data, new_data], ignore_index=True)
         else:
             # raise Exception("Failed to update data")
             print("Failed to update data")
+
+        print("#"*30)
 
     @threadqueuing
     def save_data(self):
