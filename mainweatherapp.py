@@ -102,6 +102,11 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.plotcurves["daily"]['wind'] = self.windDailyGraph.plot(np.array([0]))
         self.plotcurves["daily"]['rain'] = self.rainDailyGraph.plot(np.array([0]))
 
+        self.plotcurves["daily"]['temp'].setSkipFinite(True)
+        self.plotcurves["daily"]['hum'].setSkipFinite(True)
+        self.plotcurves["daily"]['wind'].setSkipFinite(False)
+        self.plotcurves["daily"]['rain'].setSkipFinite(False)
+
     def toolbar_clicked(self, btn_no):
         self.stackedWidget.setCurrentIndex(btn_no)
 
