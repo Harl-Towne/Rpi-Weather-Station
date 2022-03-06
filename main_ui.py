@@ -486,18 +486,6 @@ class Ui_MainWindow(object):
         self.Daily_Graphs.setObjectName("Daily_Graphs")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.Daily_Graphs)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.tempDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
-        self.tempDailyGraph.setObjectName("tempDailyGraph")
-        self.gridLayout_3.addWidget(self.tempDailyGraph, 0, 0, 1, 1)
-        self.humDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
-        self.humDailyGraph.setObjectName("humDailyGraph")
-        self.gridLayout_3.addWidget(self.humDailyGraph, 0, 1, 1, 1)
-        self.windDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
-        self.windDailyGraph.setObjectName("windDailyGraph")
-        self.gridLayout_3.addWidget(self.windDailyGraph, 1, 0, 1, 1)
-        self.rainDailyGraph = FigureCanvasQTAgg(self.Daily_Graphs)
-        self.rainDailyGraph.setObjectName("rainDailyGraph")
-        self.gridLayout_3.addWidget(self.rainDailyGraph, 1, 1, 1, 1)
         self.stackedWidget.addWidget(self.Daily_Graphs)
         self.Weekly_Graphs = QtWidgets.QWidget()
         self.Weekly_Graphs.setObjectName("Weekly_Graphs")
@@ -654,7 +642,6 @@ class Ui_MainWindow(object):
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
 from pyqtgraph import PlotWidget
 
 if __name__ == "__main__":

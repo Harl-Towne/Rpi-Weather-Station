@@ -28,6 +28,22 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     def setupUi(self, **kwargs):
         super(mainWeatherWindow, self).setupUi(self)
 
+        daily_graph_layout = self.Daily_Graphs.layout()
+
+        self.tempDailyGraph = FigureCanvas()
+        self.humDailyGraph = FigureCanvas()
+        self.windDailyGraph = FigureCanvas()
+        self.rainDailyGraph = FigureCanvas()
+
+        # self.tempDailyGraph.setObjectName("tempDailyGraph")
+        # self.humDailyGraph.setObjectName("humDailyGraph")
+        # self.windDailyGraph.setObjectName("windDailyGraph")
+        # self.rainDailyGraph.setObjectName("rainDailyGraph")
+        daily_graph_layout.addWidget(self.tempDailyGraph, 0, 0, 1, 1)
+        daily_graph_layout.addWidget(self.humDailyGraph, 0, 1, 1, 1)
+        daily_graph_layout.addWidget(self.windDailyGraph, 1, 0, 1, 1)
+        daily_graph_layout.addWidget(self.rainDailyGraph, 1, 1, 1, 1)
+
         # get data
         try:
             print("###### trying to load data from disk ######")
