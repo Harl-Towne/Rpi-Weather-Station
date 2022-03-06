@@ -28,32 +28,31 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     def setupUi(self, **kwargs):
         super(mainWeatherWindow, self).setupUi(self)
 
-        daily_graph_layout = self.Daily_Graphs.layout()
-
-        f1 = Figure()
-        f2 = Figure()
-        f3 = Figure()
-        f4 = Figure()
-
-        self.tempDailyGraph = FigureCanvas(f1)
-        self.humDailyGraph = FigureCanvas(f2)
-        self.windDailyGraph = FigureCanvas(f3)
-        self.rainDailyGraph = FigureCanvas(f4)
-
         self.plotcurves = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}
-        self.plotcurves["daily"]['temp'] = f1.add_subplot(111)
-        self.plotcurves["daily"]['hum'] = f2.add_subplot(111)
-        self.plotcurves["daily"]['wind'] = f3.add_subplot(111)
-        self.plotcurves["daily"]['rain'] = f4.add_subplot(111)
 
-        # self.tempDailyGraph.setObjectName("tempDailyGraph")
-        # self.humDailyGraph.setObjectName("humDailyGraph")
-        # self.windDailyGraph.setObjectName("windDailyGraph")
-        # self.rainDailyGraph.setObjectName("rainDailyGraph")
-        daily_graph_layout.addWidget(self.tempDailyGraph, 0, 0, 1, 1)
-        daily_graph_layout.addWidget(self.humDailyGraph, 0, 1, 1, 1)
-        daily_graph_layout.addWidget(self.windDailyGraph, 1, 0, 1, 1)
-        daily_graph_layout.addWidget(self.rainDailyGraph, 1, 1, 1, 1)
+        layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
+        for i, layout in enumerate(layouts):
+            f1 = Figure()
+            f2 = Figure()
+            f3 = Figure()
+            f4 = Figure()
+
+            c1 = FigureCanvas(f1)
+            c2 = FigureCanvas(f2)
+            c3 = FigureCanvas(f3)
+            c4 = FigureCanvas(f4)
+
+            key = self.plotcurves.keys()
+            key = key[i]
+            self.plotcurves[key]['temp'] = f1.add_subplot(111)
+            self.plotcurves[key]['hum'] = f2.add_subplot(111)
+            self.plotcurves[key]['wind'] = f3.add_subplot(111)
+            self.plotcurves[key]['rain'] = f4.add_subplot(111)
+
+            layout.addWidget(c1, 0, 0, 1, 1)
+            layout.addWidget(c2, 0, 1, 1, 1)
+            layout.addWidget(c3, 1, 0, 1, 1)
+            layout.addWidget(c4, 1, 1, 1, 1)
 
         # get data
         try:
