@@ -33,7 +33,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # get data
         try:
             print("###### trying to load data from disk ######")
-            self.data = WeatherData(agg_intervals=(pd.Timedelta("60S"), pd.Timedelta("1800S"), pd.Timedelta("86400S")))
+            self.data = WeatherData()#agg_intervals=(pd.Timedelta("60S"), pd.Timedelta("1800S"), pd.Timedelta("86400S")))
             print("succeeded")
         except KeyboardInterrupt:
             raise KeyboardInterrupt
@@ -170,7 +170,28 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["daily"]["rain"].canvas.draw()
 
     def update_weekly(self):
-        pass
+        self.axes["weekly"]["temp"].clear()
+        self.axes["weekly"]["hum"].clear()
+        self.axes["weekly"]["wind"].clear()
+        self.axes["weekly"]["rain"].clear()
+
+        data = self.data.agg_data[0]
+        x = data.loc[:, "datetime"].to_numpy()
+
+        self.axes["weekly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
+        self.axes["weekly"]["hum"].plot(x, np.array(data.loc[:, "avg_humidity"].to_numpy(), dtype=float))
+        self.axes["weekly"]["wind"].plot(x, np.array(data.loc[:, "avg_wind_speed"].to_numpy(), dtype=float))
+        self.axes["weekly"]["rain"].plot(x, np.array(data.loc[:, "avg_rain"].to_numpy(), dtype=float))
+
+        self.axes["weekly"]['temp'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["weekly"]['hum'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["weekly"]['wind'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["weekly"]['rain'].autoscale(enable=True, axis='both', tight=True)
+
+        self.figures["weekly"]["temp"].canvas.draw()
+        self.figures["weekly"]["hum"].canvas.draw()
+        self.figures["weekly"]["wind"].canvas.draw()
+        self.figures["weekly"]["rain"].canvas.draw()
 
     def update_yearly(self):
         pass
