@@ -116,9 +116,9 @@ class WeatherData(datamanager.Data):
                 ranged_data = source_data.iloc[data_start:data_end, 1:]
                 for column in ranged_data.columns:
                     if column == "rain":
-                        agg_datum[column] = [ranged_data[column].sum(min_count=1)]
+                        agg_datum[column] = [ranged_data[column].sum(min_count=1)]  # min_count ensures that .sum() returns NaN and not 0 when all values are NaN
                     elif column == "wind_direction":
-                        if pd.isnull(ranged_data[column]).all(): # if all values are NaN then .mode() returns an empty array and causes an index out of range error
+                        if pd.isnull(ranged_data[column]).all():  # if all values are NaN then .mode() returns an empty array and causes an index out of range error
                             agg_datum[column] = np.NaN
                         else:
                             agg_datum[column] = [ranged_data[column].mode()[0]]
