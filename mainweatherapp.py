@@ -1,6 +1,7 @@
 import sys
 
 import numpy as np
+import pandas as pd
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QGridLayout
 
@@ -32,7 +33,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # get data
         try:
             print("###### trying to load data from disk ######")
-            self.data = WeatherData()
+            self.data = WeatherData(agg_intervals=(pd.Timedelta("60S"), pd.Timedelta("1800S"), pd.Timedelta("86400S")))
             print("succeeded")
         except KeyboardInterrupt:
             raise KeyboardInterrupt
