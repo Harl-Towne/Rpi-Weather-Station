@@ -33,7 +33,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # get data
         try:
             print("###### trying to load data from disk ######")
-            self.data = WeatherData(agg_intervals=(pd.Timedelta("60S"), pd.Timedelta("1800S"), pd.Timedelta("86400S")))
+            self.data = WeatherData(agg_intervals=(pd.Timedelta("60S"), pd.Timedelta("300S"), pd.Timedelta("1800S")))
             print("succeeded")
         except KeyboardInterrupt:
             raise KeyboardInterrupt
@@ -141,6 +141,8 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             self.update_weekly()
         elif btn_no == 3:
             self.update_yearly()
+        elif btn_no == 4:
+            self.update_all()
 
     def update_dashboard(self):
         latest_data = self.data.rt_data.iloc[-1, :]
@@ -222,4 +224,25 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["yearly"]["rain"].canvas.draw()
 
     def update_all(self):
-        pass
+        self.axes["all"]["temp"].clear()
+        self.axes["all"]["hum"].clear()
+        self.axes["all"]["wind"].clear()
+        self.axes["all"]["rain"].clear()
+
+        data = self.data.agg_data[2]
+        x = data.loc[:, "datetime"].to_numpy()
+
+        self.axes["all"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
+        self.axes["all"]["hum"].plot(x, np.array(data.loc[:, "avg_humidity"].to_numpy(), dtype=float))
+        self.axes["all"]["wind"].plot(x, np.array(data.loc[:, "avg_wind_speed"].to_numpy(), dtype=float))
+        self.axes["all"]["rain"].plot(x, np.array(data.loc[:, "rain"].to_numpy(), dtype=float))
+
+        self.axes["all"]['temp'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["all"]['hum'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["all"]['wind'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["all"]['rain'].autoscale(enable=True, axis='both', tight=True)
+
+        self.figures["all"]["temp"].canvas.draw()
+        self.figures["all"]["hum"].canvas.draw()
+        self.figures["all"]["wind"].canvas.draw()
+        self.figures["all"]["rain"].canvas.draw()
