@@ -93,7 +93,7 @@ class WeatherData(datamanager.Data):
             # aggregate data into single datum
             agg_datum = dict()
             agg_datum["datetime"] = current_epoch
-            if (data_start is None and data_end is not None):
+            if data_start is None and data_end is not None:
                 # no data matching timeframe (insert null datum)
                 # aggregate data into single datum
                 for column in source_data.columns:
@@ -118,10 +118,10 @@ class WeatherData(datamanager.Data):
                     if column == "rain":
                         agg_datum[column] = [ranged_data[column].sum()]
                     elif column == "wind_direction":
-                        print(pd.isnull(ranged_data[column]).all())
-                        print(ranged_data[column])
-                        print(ranged_data[column].mode())
-                        agg_datum[column] = [ranged_data[column].mode()[0]]
+                        if pd.isnull(ranged_data[column]).all():
+                            agg_datum[column] = np.NaN
+                        else:
+                            agg_datum[column] = [ranged_data[column].mode()[0]]
                     else:
                         if initial_aggregation:
                             agg_datum["max_{}".format(column)] = [ranged_data[column].max()]
