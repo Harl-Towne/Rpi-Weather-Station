@@ -140,7 +140,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         elif btn_no == 2:
             self.update_weekly()
         elif btn_no == 3:
-            self.update_weekly()
+            self.update_yearly()
 
     def update_dashboard(self):
         latest_data = self.data.rt_data.iloc[-1, :]
