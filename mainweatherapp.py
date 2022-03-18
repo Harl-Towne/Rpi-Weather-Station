@@ -198,28 +198,28 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["weekly"]["rain"].canvas.draw()
 
     def update_yearly(self):
-        self.axes["weekly"]["temp"].clear()
-        self.axes["weekly"]["hum"].clear()
-        self.axes["weekly"]["wind"].clear()
-        self.axes["weekly"]["rain"].clear()
+        self.axes["yearly"]["temp"].clear()
+        self.axes["yearly"]["hum"].clear()
+        self.axes["yearly"]["wind"].clear()
+        self.axes["yearly"]["rain"].clear()
 
         data = self.data.agg_data[1]
         x = data.loc[:, "datetime"].to_numpy()
 
-        self.axes["weekly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
-        self.axes["weekly"]["hum"].plot(x, np.array(data.loc[:, "avg_humidity"].to_numpy(), dtype=float))
-        self.axes["weekly"]["wind"].plot(x, np.array(data.loc[:, "avg_wind_speed"].to_numpy(), dtype=float))
-        self.axes["weekly"]["rain"].plot(x, np.array(data.loc[:, "rain"].to_numpy(), dtype=float))
+        self.axes["yearly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
+        self.axes["yearly"]["hum"].plot(x, np.array(data.loc[:, "avg_humidity"].to_numpy(), dtype=float))
+        self.axes["yearly"]["wind"].plot(x, np.array(data.loc[:, "avg_wind_speed"].to_numpy(), dtype=float))
+        self.axes["yearly"]["rain"].plot(x, np.array(data.loc[:, "rain"].to_numpy(), dtype=float))
 
-        self.axes["weekly"]['temp'].autoscale(enable=True, axis='both', tight=True)
-        self.axes["weekly"]['hum'].autoscale(enable=True, axis='both', tight=True)
-        self.axes["weekly"]['wind'].autoscale(enable=True, axis='both', tight=True)
-        self.axes["weekly"]['rain'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["yearly"]['temp'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["yearly"]['hum'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["yearly"]['wind'].autoscale(enable=True, axis='both', tight=True)
+        self.axes["yearly"]['rain'].autoscale(enable=True, axis='both', tight=True)
 
-        self.figures["weekly"]["temp"].canvas.draw()
-        self.figures["weekly"]["hum"].canvas.draw()
-        self.figures["weekly"]["wind"].canvas.draw()
-        self.figures["weekly"]["rain"].canvas.draw()
+        self.figures["yearly"]["temp"].canvas.draw()
+        self.figures["yearly"]["hum"].canvas.draw()
+        self.figures["yearly"]["wind"].canvas.draw()
+        self.figures["yearly"]["rain"].canvas.draw()
 
     def update_all(self):
         pass
