@@ -54,7 +54,7 @@ class WeatherData(datamanager.Data):
             else:
                 first_epoch = self.agg_data[0].iloc[-1, :]["datetime"] + interval  # inclusive
 
-            print(first_epoch, last_epoch, "(", interval, ")")
+            print(first_epoch, last_epoch, "(", interval, ' X', (last_epoch-first_epoch)/interval, ")")
 
             # aggregate data
             new_data = self._get_aggregated_data(first_epoch, last_epoch, interval, source_data, initial_aggregation)
@@ -77,6 +77,7 @@ class WeatherData(datamanager.Data):
         current_epoch = first_epoch
         last_used_index = 0
         while current_epoch < last_epoch:
+            print("-"*30)
             print(current_epoch)
             data_start = None  # inclusive
             data_end = None  # exclusive
@@ -113,8 +114,6 @@ class WeatherData(datamanager.Data):
                 raise Exception("This error should never be raised. ")
             else:
                 ranged_data = source_data.iloc[data_start:data_end, 1:]
-                print(ranged_data)
-                print(ranged_data.dtypes)
                 for column in ranged_data.columns:
                     if column == "rain":
                         agg_datum[column] = [ranged_data[column].sum()]
@@ -122,7 +121,6 @@ class WeatherData(datamanager.Data):
                         agg_datum[column] = [ranged_data[column].mode()[0]]
                     else:
                         if initial_aggregation:
-                            print(column)
                             agg_datum["max_{}".format(column)] = [ranged_data[column].max()]
                             agg_datum["min_{}".format(column)] = [ranged_data[column].min()]
                             agg_datum["avg_{}".format(column)] = [ranged_data[column].mean()]
@@ -140,8 +138,6 @@ class WeatherData(datamanager.Data):
 
             last_used_index = data_end
             current_epoch += interval
-        print(aggregate_datums)
-        print("-"*10)
         if len(aggregate_datums) == 0:
             return None
         return pd.concat(aggregate_datums, ignore_index=True)
