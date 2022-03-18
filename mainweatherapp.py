@@ -53,19 +53,19 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
                     sleep(3)
 
         # data update timer
-        # self.newdata_timer = QTimer()
-        # self.newdata_timer.timeout.connect(self.data.update_data)
-        # self.newdata_timer.start(1000*4)
+        self.newdata_timer = QTimer()
+        self.newdata_timer.timeout.connect(self.data.update_data)
+        self.newdata_timer.start(1000*4)
 
         # data save timer
-        # self.savedata_timer = QTimer()
-        # self.savedata_timer.timeout.connect(self.data.save_data)
-        # self.savedata_timer.start(1000*60*1)
+        self.savedata_timer = QTimer()
+        self.savedata_timer.timeout.connect(self.data.save_data)
+        self.savedata_timer.start(1000*60*1)
 
         # data aggregate timer
-        # self.aggdata_timer = QTimer()
-        # self.aggdata_timer.timeout.connect(self.data.aggregate_data)
-        # self.aggdata_timer.start(10000)
+        self.aggdata_timer = QTimer()
+        self.aggdata_timer.timeout.connect(self.data.aggregate_data)
+        self.aggdata_timer.start(1000*60*5)
         self.data.aggregate_data()
 
         # set starting screen
