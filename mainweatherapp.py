@@ -183,7 +183,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["weekly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
         self.axes["weekly"]["hum"].plot(x, np.array(data.loc[:, "avg_humidity"].to_numpy(), dtype=float))
         self.axes["weekly"]["wind"].plot(x, np.array(data.loc[:, "avg_wind_speed"].to_numpy(), dtype=float))
-        self.axes["weekly"]["rain"].plot(x, np.array(data.loc[:, "avg_rain"].to_numpy(), dtype=float))
+        self.axes["weekly"]["rain"].plot(x, np.array(data.loc[:, "rain"].to_numpy(), dtype=float))
 
         self.axes["weekly"]['temp'].autoscale(enable=True, axis='both', tight=True)
         self.axes["weekly"]['hum'].autoscale(enable=True, axis='both', tight=True)
