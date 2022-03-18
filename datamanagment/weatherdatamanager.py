@@ -118,7 +118,7 @@ class WeatherData(datamanager.Data):
                     if column == "rain":
                         agg_datum[column] = [ranged_data[column].sum()]
                     elif column == "wind_direction":
-                        print((ranged_data[column] == np.NaN).all())
+                        print(ranged_data[column] == np.NaN)
                         print(ranged_data[column])
                         print(ranged_data[column].mode())
                         agg_datum[column] = [ranged_data[column].mode()[0]]
