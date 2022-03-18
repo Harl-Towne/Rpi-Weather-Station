@@ -137,6 +137,8 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(btn_no)
         if btn_no == 1:
             self.update_daily()
+        elif btn_no == 2:
+            self.update_weekly()
 
     def update_dashboard(self):
         latest_data = self.data.rt_data.iloc[-1, :]
