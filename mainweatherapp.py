@@ -156,7 +156,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
     @threadqueuing
-    def update_daily(self):#, axes, data, figures):
+    def update_daily(self):
         print(self.axes)
         print(self.data)
         print(self.figures)
@@ -182,6 +182,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["daily"]["wind"].canvas.draw()
         self.figures["daily"]["rain"].canvas.draw()
 
+    @threadqueuing
     def update_weekly(self):
         self.axes["weekly"]["temp"].clear()
         self.axes["weekly"]["hum"].clear()
@@ -206,6 +207,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["weekly"]["wind"].canvas.draw()
         self.figures["weekly"]["rain"].canvas.draw()
 
+    @threadqueuing
     def update_yearly(self):
         self.axes["yearly"]["temp"].clear()
         self.axes["yearly"]["hum"].clear()
@@ -230,6 +232,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.figures["yearly"]["wind"].canvas.draw()
         self.figures["yearly"]["rain"].canvas.draw()
 
+    @threadqueuing
     def update_all(self):
         self.axes["all"]["temp"].clear()
         self.axes["all"]["hum"].clear()
