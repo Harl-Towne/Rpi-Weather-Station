@@ -147,7 +147,6 @@ class WeatherData(datamanager.Data):
 
     @threadqueuing
     def update_data(self):
-        print("#"*40)
         new_data, measurement_interval = datagrabber.get_data()
         if new_data is not None:
             # get the last datetime in the already recorded data and the first datetime in the new data
@@ -178,7 +177,6 @@ class WeatherData(datamanager.Data):
             # raise Exception("Failed to update data")
             print("Failed to update data")
 
-        print("#"*30)
 
     @threadqueuing
     def save_data(self):

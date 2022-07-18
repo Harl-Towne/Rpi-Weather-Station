@@ -59,7 +59,7 @@ def get_data(address="http://192.168.4.15") -> Tuple[DataFrame, Union[Timedelta,
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except Exception as e:
-        print("Error getting data from station:\n", e)
+        # print("Error getting data from station:\n", e)
         # traceback.print_exc()
         return None, None
 
