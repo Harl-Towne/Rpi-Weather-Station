@@ -9,6 +9,9 @@ import main_ui
 
 import pyqtgraph as pg
 import matplotlib
+
+from threadqueue import threadqueuing
+
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -152,6 +155,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
+    @threadqueuing
     def update_daily(self):
         self.axes["daily"]["temp"].clear()
         self.axes["daily"]["hum"].clear()
