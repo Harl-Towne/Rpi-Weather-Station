@@ -155,7 +155,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
         self.dayRainFeild.setText(str(latest_data["rain"]))
 
-    # @threadqueuing
+    @threadqueuing
     def update_daily(self):#, axes, data, figures):
         print(self.axes)
         print(self.data)
