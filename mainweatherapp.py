@@ -21,11 +21,14 @@ from time import sleep
 from pprint import pprint
 
 
+# TODO: make the graph pages more efficient/update automaticaly
+# TODO: fix graph x axes
+
 class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     wind_directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
     def __init__(self):
-        print("#"*20)
+        print("#" * 20)
         super().__init__()
         self.setupUi()
 
@@ -55,20 +58,20 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
                     sleep(3)
 
         # data update timer
-        # self.newdata_timer = QTimer()
-        # self.newdata_timer.timeout.connect(self.data.update_data)
-        # self.newdata_timer.start(1000*4)
-        #
-        # # data save timer
-        # self.savedata_timer = QTimer()
-        # self.savedata_timer.timeout.connect(self.data.save_data)
-        # self.savedata_timer.start(1000*60*1)
-        #
-        # # data aggregate timer
-        # self.aggdata_timer = QTimer()
-        # self.aggdata_timer.timeout.connect(self.data.aggregate_data)
-        # self.aggdata_timer.start(1000*60*5)
-        # self.data.aggregate_data()
+        self.newdata_timer = QTimer()
+        self.newdata_timer.timeout.connect(self.data.update_data)
+        self.newdata_timer.start(1000 * 30)  # this needs to be more than timeout in datamanagment/datagrabber.py
+
+        # data save timer
+        self.savedata_timer = QTimer()
+        self.savedata_timer.timeout.connect(self.data.save_data)
+        self.savedata_timer.start(1000 * 60 * 1)
+
+        # data aggregate timer
+        self.aggdata_timer = QTimer()
+        self.aggdata_timer.timeout.connect(self.data.aggregate_data)
+        self.aggdata_timer.start(1000 * 60 * 5)
+        self.data.aggregate_data()
 
         # set starting screen
         self.stackedWidget.setCurrentIndex(0)
@@ -87,6 +90,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dashboard_timer.timeout.connect(self.update_dashboard)
         self.dashboard_timer.start(1000 * 5)
 
+        # maybe re-enable these and disable the button ones later          <==============
         # self.daily_timer = QTimer()
         # self.daily_timer.timeout.connect(self.update_daily)
         # self.daily_timer.start(1000 * 5)
@@ -106,7 +110,8 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # create plots and add into window
         self.axes = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}  # for updating data
         self.figures = {"daily": {}, "weekly": {}, "yearly": {}, "all": {}}  # for triggering redraw
-        layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(), self.All_Time_Graphs.layout()]
+        layouts = [self.Daily_Graphs.layout(), self.Weekly_Graphs.layout(), self.Yearly_Graphs.layout(),
+                   self.All_Time_Graphs.layout()]
         for i, layout in enumerate(layouts):
             key = list(self.axes.keys())[i]
 
@@ -156,14 +161,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
     @threadqueuing
     def update_daily(self):
-        print('hi')
         self.axes["daily"]["temp"].clear()
         self.axes["daily"]["hum"].clear()
         self.axes["daily"]["wind"].clear()
         self.axes["daily"]["rain"].clear()
 
         x = self.data.rt_data.loc[:, "datetime"].to_numpy()
-        print(x)
 
         self.axes["daily"]["temp"].plot(x, np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
         self.axes["daily"]["hum"].plot(x, np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
@@ -182,14 +185,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
     @threadqueuing
     def update_weekly(self):
-        print('hi')
         self.axes["weekly"]["temp"].clear()
         self.axes["weekly"]["hum"].clear()
         self.axes["weekly"]["wind"].clear()
         self.axes["weekly"]["rain"].clear()
 
         data = self.data.agg_data[0]
-        print(data)
         x = data.loc[:, "datetime"].to_numpy()
 
         self.axes["weekly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
@@ -209,14 +210,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
     @threadqueuing
     def update_yearly(self):
-        print('hi')
         self.axes["yearly"]["temp"].clear()
         self.axes["yearly"]["hum"].clear()
         self.axes["yearly"]["wind"].clear()
         self.axes["yearly"]["rain"].clear()
 
         data = self.data.agg_data[1]
-        print(data)
         x = data.loc[:, "datetime"].to_numpy()
 
         self.axes["yearly"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))
@@ -236,14 +235,12 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
 
     @threadqueuing
     def update_all(self):
-        print('hi')
         self.axes["all"]["temp"].clear()
         self.axes["all"]["hum"].clear()
         self.axes["all"]["wind"].clear()
         self.axes["all"]["rain"].clear()
 
         data = self.data.agg_data[2]
-        print(data)
         x = data.loc[:, "datetime"].to_numpy()
 
         self.axes["all"]["temp"].plot(x, np.array(data.loc[:, "avg_temperature"].to_numpy(), dtype=float))

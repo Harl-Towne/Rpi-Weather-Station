@@ -30,13 +30,13 @@ class threadQueue:
     @staticmethod
     def enqueue(fcn, *args, **kwargs):
         threadQueue.queue.append((fcn, args, kwargs))
-        print(len(threadQueue.queue), '-', threadQueue.queue)
+        # print(len(threadQueue.queue), '-', threadQueue.queue)
         if not threadQueue.executing:
             threadQueue._advance_queue()
 
     @staticmethod
     def _task_complete():  # DON'T YOU EVER FUCKING DARE CALL THIS FUNCTION MANUALLY
-        print(len(threadQueue.queue), '-', threadQueue.queue)
+        # print(len(threadQueue.queue), '-', threadQueue.queue)
         if len(threadQueue.queue) > 0:
             threadQueue._advance_queue()
         else:
