@@ -21,8 +21,10 @@ from time import sleep
 from pprint import pprint
 
 
-# TODO: make the graph pages more efficient/update automaticaly
+
 # TODO: fix graph x axes
+# TODO: graph titles + labels
+# TODO max/min data to graphs
 
 class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     wind_directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -89,7 +91,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dashboard_timer = QTimer()
         self.dashboard_timer.timeout.connect(self.update_dashboard)
         self.dashboard_timer.start(1000 * 5)
+        self.update_dashboard()
 
+        # TODO: make the graph pages update automaticaly (timers need to turn off automaticaly)
         # maybe re-enable these and disable the button ones later          <==============
         # self.daily_timer = QTimer()
         # self.daily_timer.timeout.connect(self.update_daily)
@@ -152,12 +156,49 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             self.update_all()
 
     def update_dashboard(self):
+        ## current data
         latest_data = self.data.rt_data.iloc[-1, :]
         self.currentTempFeild.setText(str(latest_data["temperature"]))
         self.currenthumFeild.setText(str(latest_data["humidity"]))
-        self.windSpeedFeild.setText(str(latest_data["wind_speed"]))
         self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
-        self.dayRainFeild.setText(str(latest_data["rain"]))
+
+        ## other data (averaging/agregation needed)
+
+        # datetimes for aggregate periods
+        latest_date = latest_data["datetime"]
+        # midday used for wind
+        nearest_midday = (latest_date - pd.Timedelta("12 Hours")).round(pd.Timedelta("24 hours")) + pd.Timedelta("12 Hours")
+        # 6am used for min temp/humidity (maybe max as well)
+        nearest_6am = (latest_date - pd.Timedelta("6 Hours")).round(pd.Timedelta("24 hours")) + pd.Timedelta("6 Hours")
+        # 6pm used from max temp/humidity
+        nearest_6pm = (latest_date + pd.Timedelta("6 Hours")).round(pd.Timedelta("24 hours")) - pd.Timedelta("6 Hours")
+
+        start_midday = self.data.rt_data["datetime"].searchsorted(nearest_midday - pd.Timedelta("12 Hours"), side="left")
+        start_6am = self.data.rt_data["datetime"].searchsorted(nearest_6am - pd.Timedelta("12 Hours"), side="left")
+        start_6pm = self.data.rt_data["datetime"].searchsorted(nearest_6pm - pd.Timedelta("12 Hours"), side="left")
+
+        # temp/humidity need max and mins
+        self.maxTempFeild.setText(str(self.data.rt_data["temperature"].iloc[start_6pm:-1].max()))
+        self.maxHumFeild.setText(str(self.data.rt_data["humidity"].iloc[start_6pm:-1].max()))
+
+        self.minTempFeild.setText(str(self.data.rt_data["temperature"].iloc[start_6am:-1].min()))
+        self.minHumFeild.setText(str(self.data.rt_data["humidity"].iloc[start_6am:-1].min()))
+
+        # rain needs to be summed over a period (day/night/all of yesterday)
+        index_6am = self.data.rt_data["datetime"].searchsorted(nearest_6am, side="left")
+        index_6pm = self.data.rt_data["datetime"].searchsorted(nearest_6pm, side="left")
+
+        # TODO: add rain for yesterday
+        self.nightRainFeild.setText(str(self.data.rt_data["rain"].iloc[start_6am:index_6am].sum()))
+        self.dayRainFeild.setText(str(self.data.rt_data["rain"].iloc[index_6am:index_6pm].sum()))
+
+        # wind speed needs to be averaged over a recent period (15 sec?)
+        fifteen_seconds_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("15 seconds"), side="left")
+        self.windSpeedFeild.setText(str(self.data.rt_data["wind_speed"].iloc[fifteen_seconds_ago:-1].mean()))
+
+        # wind gust needs max over a period (30 min?)
+        thirty_minutes_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("30 minutes"), side="left")
+        self.windGustFeild.setText(str(self.data.rt_data["wind_speed"].iloc[thirty_minutes_ago:-1].max()))
 
     @threadqueuing
     def update_daily(self):
