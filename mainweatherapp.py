@@ -20,11 +20,11 @@ from datamanagment.weatherdatamanager import WeatherData
 from time import sleep
 from pprint import pprint
 
-
-
 # TODO: fix graph x axes
 # TODO: graph titles + labels
 # TODO max/min data to graphs
+# TODO: Delete data sometime
+# TODO: rain calculations
 
 class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     wind_directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
