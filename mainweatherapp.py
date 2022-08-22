@@ -172,6 +172,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     def update_dashboard(self):
         ## current data
         latest_data = self.data.rt_data.iloc[-1, :]
+        print(self.data.rt_data)
         self.currentTempFeild.setText(str(latest_data["temperature"]))
         self.currenthumFeild.setText(str(latest_data["humidity"]))
         self.windDirectFeild.setText(self.wind_directions[int(latest_data["wind_direction"])])
