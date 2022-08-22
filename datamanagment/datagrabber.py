@@ -51,9 +51,14 @@ def get_data(address="http://192.168.4.15") -> Tuple[DataFrame, Union[Timedelta,
             data_dict["datetime"].append(now + (measurement_interval * (start_epoch + row_num + 1)))  # +1 so that it ends on 0
             for col_num, key in enumerate(keys):
                 data_dict[key].append(datum[col_num])
-
+                
+        df = pd.DataFrame(data_dict)
+        
+        for key in keys:
+            df[key] = pd.to_numeric(df[key])
+        
         print("Successfully got data")
-        return pd.DataFrame(data_dict), measurement_interval
+        return df, measurement_interval
 
     # more error shit
     except KeyboardInterrupt:
