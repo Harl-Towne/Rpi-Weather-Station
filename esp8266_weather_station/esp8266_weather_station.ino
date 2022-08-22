@@ -208,10 +208,13 @@ void loop()
     uint8_t wind_direction = maxx;
 
     // record temperature & humidity
-    // float temp = dht.readTemperature();
-    // float humidity = dht.readHumidity(); // <======================================================= uncomment 
-    float temp = 25;
-    float humidity = 80;
+    float temp = dht.readTemperature();
+    float humidity = dht.readHumidity(); // <======================================================= uncomment 
+    // float temp = 25;
+    // float humidity = 80;
+    Serial.print(temp);
+    Serial.print("\t");
+    Serial.println(humidity);
     // Check if any reads failed and exit early (to try again).
     if (isnan(temp) || isnan(humidity)) {
       temp = -1;

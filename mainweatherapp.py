@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMainWindow, QGridLayout
+from matplotlib import ticker
+from matplotlib import dates as mdates
 
 import main_ui
 
@@ -20,11 +22,12 @@ from datamanagment.weatherdatamanager import WeatherData
 from time import sleep
 from pprint import pprint
 
-# TODO: fix graph x axes
-# TODO: graph titles + labels
+
 # TODO max/min data to graphs
 # TODO: Delete data sometime
 # TODO: rain calculations
+# TODO: add units option to settings
+# TODO: add units to dashboard
 
 class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
     wind_directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -73,7 +76,7 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.aggdata_timer = QTimer()
         self.aggdata_timer.timeout.connect(self.data.aggregate_data)
         self.aggdata_timer.start(1000 * 60 * 5)
-        self.data.aggregate_data()
+        # self.data.aggregate_data()
 
         # set starting screen
         self.stackedWidget.setCurrentIndex(0)
@@ -91,9 +94,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dashboard_timer = QTimer()
         self.dashboard_timer.timeout.connect(self.update_dashboard)
         self.dashboard_timer.start(1000 * 5)
-        self.update_dashboard()
+        # self.update_dashboard()
 
-        # TODO: make the graph pages update automaticaly (timers need to turn off automaticaly)
+        # TODO: make the graph pages update automatically (timers need to turn off automaticaly)
         # maybe re-enable these and disable the button ones later          <==============
         # self.daily_timer = QTimer()
         # self.daily_timer.timeout.connect(self.update_daily)
@@ -139,6 +142,17 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
             self.axes[key]['wind'].autoscale(enable=True, axis='both', tight=True)
             self.axes[key]['rain'].autoscale(enable=True, axis='both', tight=True)
 
+            # general styling
+            t = 0.88
+            b = 0.1
+            r = 0.99
+            l = 0.12
+            self.figures[key]['temp'].subplots_adjust(left=l, right=r, top=t, bottom=b)
+            self.figures[key]['hum'].subplots_adjust(left=l, right=r, top=t, bottom=b)
+            self.figures[key]['wind'].subplots_adjust(left=l, right=r, top=t, bottom=b)
+            self.figures[key]['rain'].subplots_adjust(left=l, right=r, top=t, bottom=b)
+
+            # add to layout
             layout.addWidget(c1, 0, 0, 1, 1)
             layout.addWidget(c2, 0, 1, 1, 1)
             layout.addWidget(c3, 1, 0, 1, 1)
@@ -167,13 +181,15 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         # datetimes for aggregate periods
         latest_date = latest_data["datetime"]
         # midday used for wind
-        nearest_midday = (latest_date - pd.Timedelta("12 Hours")).round(pd.Timedelta("24 hours")) + pd.Timedelta("12 Hours")
+        nearest_midday = (latest_date - pd.Timedelta("12 Hours")).round(pd.Timedelta("24 hours")) + pd.Timedelta(
+            "12 Hours")
         # 6am used for min temp/humidity (maybe max as well)
         nearest_6am = (latest_date - pd.Timedelta("6 Hours")).round(pd.Timedelta("24 hours")) + pd.Timedelta("6 Hours")
         # 6pm used from max temp/humidity
         nearest_6pm = (latest_date + pd.Timedelta("6 Hours")).round(pd.Timedelta("24 hours")) - pd.Timedelta("6 Hours")
 
-        start_midday = self.data.rt_data["datetime"].searchsorted(nearest_midday - pd.Timedelta("12 Hours"), side="left")
+        start_midday = self.data.rt_data["datetime"].searchsorted(nearest_midday - pd.Timedelta("12 Hours"),
+                                                                  side="left")
         start_6am = self.data.rt_data["datetime"].searchsorted(nearest_6am - pd.Timedelta("12 Hours"), side="left")
         start_6pm = self.data.rt_data["datetime"].searchsorted(nearest_6pm - pd.Timedelta("12 Hours"), side="left")
 
@@ -193,32 +209,86 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.dayRainFeild.setText(str(self.data.rt_data["rain"].iloc[index_6am:index_6pm].sum()))
 
         # wind speed needs to be averaged over a recent period (15 sec?)
-        fifteen_seconds_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("15 seconds"), side="left")
+        fifteen_seconds_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("15 seconds"),
+                                                                         side="left")
         self.windSpeedFeild.setText(str(self.data.rt_data["wind_speed"].iloc[fifteen_seconds_ago:-1].mean()))
 
         # wind gust needs max over a period (30 min?)
-        thirty_minutes_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("30 minutes"), side="left")
+        thirty_minutes_ago = self.data.rt_data["datetime"].searchsorted(latest_date - pd.Timedelta("30 minutes"),
+                                                                        side="left")
         self.windGustFeild.setText(str(self.data.rt_data["wind_speed"].iloc[thirty_minutes_ago:-1].max()))
+
+    def format_axes(self, axes, page):
+        axes['temp'].set_title("Temperature (°C)")
+        axes['hum'].set_title("Humidity (%?)")
+        axes['wind'].set_title("Wind (m/s)")
+        axes['rain'].set_title("Rain (?)")
+
+        tick_loc = ticker.LinearLocator(numticks=5)
+        rt_date_form = mdates.AutoDateFormatter(tick_loc)
+        if page == "daily":
+            tick_loc = mdates.HourLocator(interval=1)
+            rt_date_form = mdates.DateFormatter("%I%p")
+        elif page == "weekly":
+            tick_loc = mdates.DayLocator(interval=2)
+            rt_date_form = mdates.DateFormatter("%a")
+        elif page == "yearly":
+            tick_loc = mdates.MonthLocator(interval=2)
+            rt_date_form = mdates.DateFormatter("%m")
+        elif page == "all":
+            tick_loc = mdates.YearLocator()
+            rt_date_form = mdates.DateFormatter("%Y")
+
+        axes['temp'].xaxis.set_major_locator(tick_loc)
+        axes['hum'].xaxis.set_major_locator(tick_loc)
+        axes['wind'].xaxis.set_major_locator(tick_loc)
+        axes['rain'].xaxis.set_major_locator(tick_loc)
+
+        axes['temp'].xaxis.set_major_formatter(rt_date_form)
+        axes['hum'].xaxis.set_major_formatter(rt_date_form)
+        axes['wind'].xaxis.set_major_formatter(rt_date_form)
+        axes['rain'].xaxis.set_major_formatter(rt_date_form)
+
+        axes['temp'].grid(which='major', color='#DDDDDD', linewidth=1)
+        axes['temp'].grid(which='minor', color='#EEEEEE', linewidth=0.8)
+        axes['hum'].grid(which='major', color='#DDDDDD', linewidth=1)
+        axes['hum'].grid(which='minor', color='#EEEEEE', linewidth=0.8)
+        axes['wind'].grid(which='major', color='#DDDDDD', linewidth=1)
+        axes['wind'].grid(which='minor', color='#EEEEEE', linewidth=0.8)
+        axes['rain'].grid(which='major', color='#DDDDDD', linewidth=1)
+        axes['rain'].grid(which='minor', color='#EEEEEE', linewidth=0.8)
+        axes['temp'].minorticks_on()
+        axes['hum'].minorticks_on()
+        axes['wind'].minorticks_on()
+        axes['rain'].minorticks_on()
 
     @threadqueuing
     def update_daily(self):
+        # cla
         self.axes["daily"]["temp"].clear()
         self.axes["daily"]["hum"].clear()
         self.axes["daily"]["wind"].clear()
         self.axes["daily"]["rain"].clear()
 
+        # get x data
         x = self.data.rt_data.loc[:, "datetime"].to_numpy()
 
+        # plot
         self.axes["daily"]["temp"].plot(x, np.array(self.data.rt_data.loc[:, "temperature"].to_numpy(), dtype=float))
         self.axes["daily"]["hum"].plot(x, np.array(self.data.rt_data.loc[:, "humidity"].to_numpy(), dtype=float))
         self.axes["daily"]["wind"].plot(x, np.array(self.data.rt_data.loc[:, "wind_speed"].to_numpy(), dtype=float))
         self.axes["daily"]["rain"].plot(x, np.array(self.data.rt_data.loc[:, "rain"].to_numpy(), dtype=float))
 
+        # auto set limits to fit data
         self.axes["daily"]['temp'].autoscale(enable=True, axis='both', tight=True)
         self.axes["daily"]['hum'].autoscale(enable=True, axis='both', tight=True)
         self.axes["daily"]['wind'].autoscale(enable=True, axis='both', tight=True)
         self.axes["daily"]['rain'].autoscale(enable=True, axis='both', tight=True)
 
+        # styling
+        self.format_axes(self.axes["daily"], "daily")
+
+        # draw
         self.figures["daily"]["temp"].canvas.draw()
         self.figures["daily"]["hum"].canvas.draw()
         self.figures["daily"]["wind"].canvas.draw()
@@ -243,6 +313,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["weekly"]['hum'].autoscale(enable=True, axis='both', tight=True)
         self.axes["weekly"]['wind'].autoscale(enable=True, axis='both', tight=True)
         self.axes["weekly"]['rain'].autoscale(enable=True, axis='both', tight=True)
+
+        # styling
+        self.format_axes(self.axes["weekly"], "weekly")
 
         self.figures["weekly"]["temp"].canvas.draw()
         self.figures["weekly"]["hum"].canvas.draw()
@@ -269,6 +342,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["yearly"]['wind'].autoscale(enable=True, axis='both', tight=True)
         self.axes["yearly"]['rain'].autoscale(enable=True, axis='both', tight=True)
 
+        # styling
+        self.format_axes(self.axes["yearly"], "yearly")
+
         self.figures["yearly"]["temp"].canvas.draw()
         self.figures["yearly"]["hum"].canvas.draw()
         self.figures["yearly"]["wind"].canvas.draw()
@@ -293,6 +369,9 @@ class mainWeatherWindow(QMainWindow, main_ui.Ui_MainWindow):
         self.axes["all"]['hum'].autoscale(enable=True, axis='both', tight=True)
         self.axes["all"]['wind'].autoscale(enable=True, axis='both', tight=True)
         self.axes["all"]['rain'].autoscale(enable=True, axis='both', tight=True)
+
+        # styling
+        self.format_axes(self.axes["all"], "all")
 
         self.figures["all"]["temp"].canvas.draw()
         self.figures["all"]["hum"].canvas.draw()
