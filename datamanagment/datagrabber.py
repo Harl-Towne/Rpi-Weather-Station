@@ -25,10 +25,10 @@ def get_data(address="http://192.168.4.15") -> Tuple[DataFrame, Union[Timedelta,
 
         # error shit
         if r.status_code == 204:
-            return None
+            return None, None
         if r.status_code == 400:
             print(Fore.RED + "Error: 400, Bad Request")
-            return None
+            return None, None
 
         # get meta-data
         measurement_interval = pd.Timedelta("{}ms".format(r.headers["MeasurementInterval"]))

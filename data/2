@@ -1,0 +1,2 @@
+datetime,max_wind_speed,min_wind_speed,avg_wind_speed,rain,wind_direction,max_temperature,min_temperature,avg_temperature,max_humidity,min_humidity,avg_humidity
+2022-08-22 20:00:00,0.0,0.0,0.0,0.0,0.0,23.6,23.6,23.6,53.0,53.0,53.0
